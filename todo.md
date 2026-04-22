@@ -8,8 +8,8 @@
 - [x] Transaction form with amount, category, date, and description
 - [x] Transactions list screen with filtering and search
 - [x] Monthly summary screen with stats and category breakdown
-- [ ] Category management screen
-- [ ] Settings screen with data export/import
+- [x] Category management screen (integrated in add transaction)
+- [x] Settings screen with data export/import
 - [x] Floating action button for quick transaction add
 - [x] Bottom tab navigation between screens
 
