@@ -28,11 +28,11 @@ const schemeFromBundleId = `manus${timestamp}`;
 
 const env = {
   // App branding - update these values directly (do not use env vars)
-  appName: "Personal Expense Tracker",
+  appName: "Expense Tracker",
   appSlug: "expense-tracker-mobile",
   // S3 URL of the app logo - set this to the URL returned by generate_image when creating custom logo
   // Leave empty to use the default icon from assets/images/icon.png
-  logoUrl: "",
+  logoUrl: "https://d2xsxph8kpxj0f.cloudfront.net/310519663551880510/9VdPaKJPpRyM3ZPNehvENL/icon-6wuDj8E4hUP7xsjJJnxMJW.webp",
   scheme: schemeFromBundleId,
   iosBundleId: bundleId,
   androidPackage: bundleId,

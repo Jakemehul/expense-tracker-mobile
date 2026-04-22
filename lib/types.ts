@@ -1,0 +1,53 @@
+/**
+ * Transaction type definition
+ */
+export interface Transaction {
+  id: string;
+  type: "income" | "expense";
+  amount: number;
+  category: string;
+  date: Date;
+  description: string;
+  createdAt: Date;
+}
+
+/**
+ * Category definition
+ */
+export interface Category {
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+  type: "income" | "expense" | "both";
+}
+
+/**
+ * Monthly summary data
+ */
+export interface MonthlySummary {
+  month: Date;
+  totalIncome: number;
+  totalExpense: number;
+  netBalance: number;
+  byCategory: Record<string, { amount: number; percentage: number }>;
+}
+
+/**
+ * Default categories
+ */
+export const DEFAULT_CATEGORIES: Category[] = [
+  // Expense categories
+  { id: "food", name: "Food & Dining", icon: "🍔", color: "#FF6B6B", type: "expense" },
+  { id: "transport", name: "Transport", icon: "🚗", color: "#4ECDC4", type: "expense" },
+  { id: "utilities", name: "Utilities", icon: "💡", color: "#FFE66D", type: "expense" },
+  { id: "entertainment", name: "Entertainment", icon: "🎬", color: "#A8E6CF", type: "expense" },
+  { id: "shopping", name: "Shopping", icon: "🛍️", color: "#FF8B94", type: "expense" },
+  { id: "health", name: "Health & Fitness", icon: "💪", color: "#C7CEEA", type: "expense" },
+  { id: "other-expense", name: "Other", icon: "📌", color: "#9BA1A6", type: "expense" },
+  
+  // Income categories
+  { id: "salary", name: "Salary", icon: "💰", color: "#22C55E", type: "income" },
+  { id: "freelance", name: "Freelance", icon: "💻", color: "#60A5FA", type: "income" },
+  { id: "other-income", name: "Other Income", icon: "⭐", color: "#FBBF24", type: "income" },
+];
