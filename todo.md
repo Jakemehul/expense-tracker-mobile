@@ -84,3 +84,16 @@
 - [x] Show current date as default
 - [x] Display selected date clearly
 - [x] Test date picker functionality (22 tests)
+
+## Backup & Export Features (New Feature)
+
+- [x] Create export service for CSV generation
+- [x] Create export service for PDF generation (HTML format)
+- [x] Export all transactions to CSV
+- [x] Export category-wise spending to CSV
+- [x] Export all transactions to PDF with formatting
+- [x] Export category-wise spending summary to PDF
+- [x] Add export buttons to settings screen
+- [x] Generate file names with timestamps
+- [x] Share exported files via system share
+- [x] Test export functionality (65 tests passing)
