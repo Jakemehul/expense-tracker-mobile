@@ -74,3 +74,13 @@
 - [x] Update budget calculations after edits (automatic via context)
 - [x] Test transaction editing logic (16 tests)
 - [x] Test transaction deletion logic (16 tests)
+
+## Date Picker for Backdated Transactions (New Feature)
+
+- [x] Create date picker component
+- [x] Add date picker to add transaction screen
+- [x] Add date picker to edit transaction screen
+- [x] Allow selecting dates up to 365 days in the past
+- [x] Show current date as default
+- [x] Display selected date clearly
+- [x] Test date picker functionality (22 tests)

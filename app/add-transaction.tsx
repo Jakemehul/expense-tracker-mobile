@@ -1,8 +1,17 @@
-import { ScrollView, Text, View, TouchableOpacity, TextInput, Pressable, Modal } from "react-native";
+import {
+  ScrollView,
+  Text,
+  View,
+  TouchableOpacity,
+  TextInput,
+  Pressable,
+  Modal,
+} from "react-native";
 import { useRouter } from "expo-router";
 import { ScreenContainer } from "@/components/screen-container";
 import { useTransactions } from "@/lib/transaction-context";
 import { DEFAULT_CATEGORIES } from "@/lib/types";
+import { DatePicker } from "@/components/date-picker";
 import { useState } from "react";
 
 export default function AddTransactionScreen() {
@@ -147,20 +156,10 @@ export default function AddTransactionScreen() {
           </Pressable>
         </View>
 
-        {/* Date Selector */}
-        <View className="mb-4">
+        {/* Date Picker */}
+        <View className="mb-6">
           <Text className="text-sm font-medium text-foreground mb-2">Date</Text>
-          <Pressable
-            onPress={() => {
-              // Simple date picker - just show current date for now
-              // In a real app, you'd use a date picker library
-            }}
-            style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
-          >
-            <View className="bg-surface border border-border rounded-lg px-4 py-3">
-              <Text className="text-foreground">{formatDate(date)}</Text>
-            </View>
-          </Pressable>
+          <DatePicker selectedDate={date} onDateChange={setDate} maxDaysInPast={365} />
         </View>
 
         {/* Description Input */}

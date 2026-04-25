@@ -12,6 +12,7 @@ import {
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { ScreenContainer } from "@/components/screen-container";
 import { useTransactions } from "@/lib/transaction-context";
+import { DatePicker } from "@/components/date-picker";
 import { useState, useEffect, useMemo } from "react";
 
 export default function EditTransactionScreen() {
@@ -186,20 +187,10 @@ export default function EditTransactionScreen() {
           </Pressable>
         </View>
 
-        {/* Date Selection */}
+        {/* Date Picker */}
         <View className="mb-6">
           <Text className="text-sm font-medium text-foreground mb-2">Date</Text>
-          <Pressable
-            onPress={() => {
-              // For now, show current date. In a real app, you'd use a date picker
-              Alert.alert("Date", `Current date: ${formatDate(date)}`);
-            }}
-            style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
-          >
-            <View className="bg-surface border border-border rounded-lg px-4 py-3">
-              <Text className="text-foreground font-medium">{formatDate(date)}</Text>
-            </View>
-          </Pressable>
+          <DatePicker selectedDate={date} onDateChange={setDate} maxDaysInPast={365} />
         </View>
 
         {/* Description Input */}
