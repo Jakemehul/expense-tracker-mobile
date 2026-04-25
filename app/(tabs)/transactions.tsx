@@ -1,10 +1,12 @@
-import { ScrollView, Text, View, FlatList, Pressable, TextInput } from "react-native";
+import { ScrollView, Text, View, FlatList, Pressable, TextInput, Alert } from "react-native";
+import { useRouter } from "expo-router";
 import { ScreenContainer } from "@/components/screen-container";
 import { useTransactions } from "@/lib/transaction-context";
 import { useState, useMemo } from "react";
 
 export default function TransactionsScreen() {
-  const { transactions } = useTransactions();
+  const router = useRouter();
+  const { transactions, deleteTransaction } = useTransactions();
   const [searchText, setSearchText] = useState("");
   const [filterType, setFilterType] = useState<"all" | "income" | "expense">("all");
 
@@ -33,6 +35,35 @@ export default function TransactionsScreen() {
       day: "numeric",
       year: "numeric",
     }).format(new Date(date));
+  };
+
+  const handleEdit = (transactionId: string) => {
+    router.push({
+      pathname: "/edit-transaction",
+      params: { id: transactionId },
+    });
+  };
+
+  const handleDelete = (transactionId: string) => {
+    Alert.alert(
+      "Delete Transaction",
+      "Are you sure you want to delete this transaction? This action cannot be undone.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await deleteTransaction(transactionId);
+              Alert.alert("Success", "Transaction deleted");
+            } catch (error) {
+              Alert.alert("Error", "Failed to delete transaction");
+            }
+          },
+        },
+      ]
+    );
   };
 
   return (
@@ -152,14 +183,8 @@ export default function TransactionsScreen() {
             data={filteredTransactions}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
-              <Pressable
-                style={({ pressed }) => [
-                  {
-                    opacity: pressed ? 0.7 : 1,
-                  },
-                ]}
-              >
-                <View className="bg-surface rounded-xl p-4 mb-2 flex-row items-center justify-between border border-border">
+              <View className="bg-surface rounded-xl p-4 mb-2 border border-border">
+                <View className="flex-row items-center justify-between mb-3">
                   <View className="flex-row items-center flex-1">
                     <Text className="text-3xl mr-3">{item.category}</Text>
                     <View className="flex-1">
@@ -179,7 +204,29 @@ export default function TransactionsScreen() {
                     {formatCurrency(item.amount)}
                   </Text>
                 </View>
-              </Pressable>
+
+                {/* Action Buttons */}
+                <View className="flex-row gap-2 pt-3 border-t border-border">
+                  <Pressable
+                    onPress={() => handleEdit(item.id)}
+                    style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
+                    className="flex-1"
+                  >
+                    <View className="bg-primary rounded-lg py-2 items-center">
+                      <Text className="text-white font-semibold text-sm">Edit</Text>
+                    </View>
+                  </Pressable>
+                  <Pressable
+                    onPress={() => handleDelete(item.id)}
+                    style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
+                    className="flex-1"
+                  >
+                    <View className="bg-error rounded-lg py-2 items-center">
+                      <Text className="text-white font-semibold text-sm">Delete</Text>
+                    </View>
+                  </Pressable>
+                </View>
+              </View>
             )}
           />
         )}

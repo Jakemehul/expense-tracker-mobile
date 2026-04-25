@@ -61,3 +61,16 @@
 - [x] Dedicated budgets tab with overall summary
 - [x] Budget context provider and hooks
 - [x] Comprehensive test coverage
+
+## Transaction Editing & Deletion (New Feature)
+
+- [x] Add updateTransaction method to transaction context
+- [x] Add deleteTransaction method to transaction context
+- [x] Create edit transaction modal screen
+- [x] Add edit/delete buttons to transaction list items
+- [ ] Add swipe-to-delete gesture support (optional enhancement)
+- [x] Transaction detail view with edit option
+- [x] Confirmation dialog for deletion
+- [x] Update budget calculations after edits (automatic via context)
+- [x] Test transaction editing logic (16 tests)
+- [x] Test transaction deletion logic (16 tests)
