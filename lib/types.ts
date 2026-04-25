@@ -23,6 +23,31 @@ export interface Category {
 }
 
 /**
+ * Budget definition
+ */
+export interface Budget {
+  id: string;
+  categoryId: string;
+  limit: number; // Monthly budget limit
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/**
+ * Budget status for a category
+ */
+export interface BudgetStatus {
+  categoryId: string;
+  categoryName: string;
+  categoryIcon: string;
+  limit: number;
+  spent: number;
+  remaining: number;
+  percentage: number;
+  status: "safe" | "warning" | "critical" | "exceeded"; // safe (<75%), warning (75-90%), critical (90-100%), exceeded (>100%)
+}
+
+/**
  * Monthly summary data
  */
 export interface MonthlySummary {

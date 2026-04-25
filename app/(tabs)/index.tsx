@@ -2,12 +2,42 @@ import { ScrollView, Text, View, TouchableOpacity, FlatList, Pressable } from "r
 import { useRouter } from "expo-router";
 import { ScreenContainer } from "@/components/screen-container";
 import { useTransactions } from "@/lib/transaction-context";
+import { useBudgets } from "@/lib/budget-context";
+import { BudgetStatusCard } from "@/components/budget-status-card";
 import { useColors } from "@/hooks/use-colors";
 import { useMemo } from "react";
+
+function BudgetWarnings() {
+  const { getBudgetStatus } = useBudgets();
+  const now = new Date();
+
+  const budgetStatuses = useMemo(() => {
+    return getBudgetStatus(now.getFullYear(), now.getMonth()).filter(
+      (b) => b.status !== "safe"
+    );
+  }, [getBudgetStatus, now]);
+
+  if (budgetStatuses.length === 0) {
+    return (
+      <View className="bg-surface rounded-2xl p-4 border border-border">
+        <Text className="text-muted text-center text-sm">All budgets are on track ✓</Text>
+      </View>
+    );
+  }
+
+  return (
+    <View>
+      {budgetStatuses.map((status) => (
+        <BudgetStatusCard key={status.categoryId} status={status} compact={true} />
+      ))}
+    </View>
+  );
+}
 
 export default function HomeScreen() {
   const router = useRouter();
   const { transactions, isLoading } = useTransactions();
+  const { budgets } = useBudgets();
   const colors = useColors();
 
   // Get current month stats
@@ -98,6 +128,20 @@ export default function HomeScreen() {
           </View>
         </View>
 
+        {/* Budget Warnings Section */}
+        {budgets.length > 0 && (
+          <View className="mb-6">
+            <View className="flex-row justify-between items-center mb-3">
+              <Text className="text-lg font-semibold text-foreground">Budget Status</Text>
+              <Pressable onPress={() => router.push("../budget-settings")}>
+                <Text className="text-sm text-primary font-medium">Manage</Text>
+              </Pressable>
+            </View>
+
+            <BudgetWarnings />
+          </View>
+        )}
+
         {/* Recent Transactions Section */}
         <View className="mb-6">
           <View className="flex-row justify-between items-center mb-3">
@@ -124,9 +168,9 @@ export default function HomeScreen() {
               data={recentTransactions}
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
-              <Pressable
-                onPress={() => {}}
-                style={({ pressed }) => [
+                <Pressable
+                  onPress={() => {}}
+                  style={({ pressed }) => [
                     {
                       opacity: pressed ? 0.7 : 1,
                     },

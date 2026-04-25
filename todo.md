@@ -45,3 +45,19 @@
 - [x] Test on multiple screen sizes (responsive layout)
 - [x] Verify dark mode functionality (theme provider)
 - [ ] Create checkpoint before delivery
+
+## Budget Tracking (New Feature)
+
+- [x] Budget data model and storage
+- [x] Set budget limits for each category
+- [x] Edit and delete budgets
+- [x] Calculate spending vs budget for current month
+- [x] Budget warning system (75%, 90%, 100% thresholds)
+- [x] Budget status indicators in summary screen
+- [x] Budget cards in home screen
+- [x] Budget management UI in settings
+- [x] Visual progress bars for budget usage
+- [x] Color-coded warnings (yellow, orange, red)
+- [x] Dedicated budgets tab with overall summary
+- [x] Budget context provider and hooks
+- [x] Comprehensive test coverage

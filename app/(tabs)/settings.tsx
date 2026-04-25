@@ -2,10 +2,12 @@ import { ScrollView, Text, View, TouchableOpacity, Alert, Share } from "react-na
 import { ScreenContainer } from "@/components/screen-container";
 import { useTransactions } from "@/lib/transaction-context";
 import { useColorScheme } from "@/hooks/use-color-scheme";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SettingsScreen() {
+  const router = useRouter();
   const { transactions } = useTransactions();
   const colorScheme = useColorScheme();
   const [isDarkMode, setIsDarkMode] = useState(colorScheme === "dark");
@@ -94,6 +96,24 @@ export default function SettingsScreen() {
               <Text className="font-semibold text-primary">{transactions.length}</Text>
             </View>
           </View>
+        </View>
+
+        {/* Budget Management Section */}
+        <View className="mb-6">
+          <Text className="text-sm font-semibold text-muted mb-3 uppercase">Budget Management</Text>
+          <TouchableOpacity
+            onPress={() => router.push("../budget-settings")}
+            className="bg-primary rounded-lg p-4 mb-2 active:opacity-80"
+            activeOpacity={0.8}
+          >
+            <View className="flex-row items-center justify-between">
+              <Text className="text-white font-semibold">💰 Set Budgets</Text>
+              <Text className="text-white">→</Text>
+            </View>
+            <Text className="text-white text-xs mt-1 opacity-80">
+              Set monthly spending limits by category
+            </Text>
+          </TouchableOpacity>
         </View>
 
         {/* Data Management Section */}
