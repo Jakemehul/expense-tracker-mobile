@@ -26,11 +26,11 @@ function BudgetWarnings() {
 
   if (budgetStatuses.length === 0) {
     return (
-      <View className="bg-success/15 rounded-2xl p-5 border-2 border-success">
-        <View className="flex-row items-center justify-center gap-2">
-          <Text className="text-2xl">✅</Text>
-          <Text className="text-success font-bold text-center text-base">
-            All budgets are on track!
+      <View className="bg-success rounded-2xl p-5">
+        <View className="flex-row items-center justify-center gap-3">
+          <Text className="text-3xl">✅</Text>
+          <Text className="text-white font-bold text-lg">
+            All budgets on track!
           </Text>
         </View>
       </View>
@@ -117,25 +117,29 @@ export default function HomeScreen() {
         {/* Stats Cards */}
         <View className="gap-3 mb-6">
           {/* Total Balance Card */}
-          <View className="bg-primary rounded-3xl p-6 shadow-lg">
-            <Text className="text-sm text-white/80 mb-2 font-medium">Total Balance</Text>
-            <Text className="text-4xl font-bold text-white">
+          <View className="bg-primary rounded-2xl p-6">
+            <Text className="text-sm text-white opacity-80 mb-2">Total Balance</Text>
+            <Text className="text-3xl font-bold text-white">
               {formatCurrency(stats.netBalance)}
             </Text>
-            <View className="mt-4 flex-row gap-4">
-              <View className="flex-1">
-                <Text className="text-xs text-white/70 font-medium">💰 Income</Text>
-                <Text className="text-lg font-bold mt-1" style={{ color: "#22C55E" }}>
-                  {formatCurrency(stats.totalIncome)}
-                </Text>
-              </View>
-              <View className="w-px bg-white/20" />
-              <View className="flex-1">
-                <Text className="text-xs text-white/70 font-medium">💸 Expense</Text>
-                <Text className="text-lg font-bold mt-1" style={{ color: "#EF4444" }}>
-                  {formatCurrency(stats.totalExpense)}
-                </Text>
-              </View>
+          </View>
+
+          {/* Income & Expense Row */}
+          <View className="flex-row gap-3">
+            {/* Income Card */}
+            <View className="flex-1 bg-surface rounded-2xl p-4 border border-border">
+              <Text className="text-xs text-muted mb-1">💰 Income</Text>
+              <Text className="text-xl font-bold" style={{ color: "#22C55E" }}>
+                {formatCurrency(stats.totalIncome)}
+              </Text>
+            </View>
+
+            {/* Expense Card */}
+            <View className="flex-1 bg-surface rounded-2xl p-4 border border-border">
+              <Text className="text-xs text-muted mb-1">💸 Expense</Text>
+              <Text className="text-xl font-bold" style={{ color: "#EF4444" }}>
+                {formatCurrency(stats.totalExpense)}
+              </Text>
             </View>
           </View>
         </View>
@@ -144,9 +148,9 @@ export default function HomeScreen() {
         {budgets.length > 0 && (
           <View className="mb-6">
             <View className="flex-row justify-between items-center mb-3">
-              <Text className="text-lg font-bold text-foreground">💰 Budget Status</Text>
+              <Text className="text-lg font-semibold text-foreground">💰 Budget Status</Text>
               <Pressable onPress={() => router.push("../budget-settings")}>
-                <Text className="text-sm text-primary font-semibold">Manage</Text>
+                <Text className="text-sm text-primary font-medium">Manage</Text>
               </Pressable>
             </View>
 
@@ -157,9 +161,9 @@ export default function HomeScreen() {
         {/* Recent Transactions Section */}
         <View className="mb-6">
           <View className="flex-row justify-between items-center mb-3">
-            <Text className="text-lg font-bold text-foreground">📊 Recent Transactions</Text>
+            <Text className="text-lg font-semibold text-foreground">📊 Recent Transactions</Text>
             <Pressable onPress={() => router.push("/transactions")}>
-              <Text className="text-sm text-primary font-semibold">View All</Text>
+              <Text className="text-sm text-primary font-medium">View All</Text>
             </Pressable>
           </View>
 
@@ -192,7 +196,7 @@ export default function HomeScreen() {
                     style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
                   >
                     <View
-                      className="bg-surface rounded-2xl p-3 mb-2 flex-row items-center justify-between border border-border"
+                      className="bg-surface rounded-xl p-3 mb-2 flex-row items-center justify-between border border-border"
                       style={{
                         borderLeftWidth: 4,
                         borderLeftColor: isIncome ? "#22C55E" : "#EF4444",

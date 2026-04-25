@@ -117,3 +117,11 @@
 - [x] Improve Total Balance card visibility with better contrast
 - [x] Fix "All budgets on track" message visibility
 - [x] Make budget status card more prominent
+
+## UI Refinement - Simplify & Improve Readability
+
+- [x] Remove blue gradient Total Balance card - revert to simpler design
+- [x] Restore clean income/expense card layout from original
+- [x] Fix budget status message with better background contrast
+- [x] Make budget text easily readable without focusing
+- [x] Simplify overall home screen design
