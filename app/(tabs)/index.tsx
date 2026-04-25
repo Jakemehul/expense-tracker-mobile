@@ -26,10 +26,13 @@ function BudgetWarnings() {
 
   if (budgetStatuses.length === 0) {
     return (
-      <View className="bg-success/10 rounded-2xl p-4 border border-success/30">
-        <Text className="text-success text-center text-sm font-medium">
-          ✓ All budgets are on track
-        </Text>
+      <View className="bg-success/15 rounded-2xl p-5 border-2 border-success">
+        <View className="flex-row items-center justify-center gap-2">
+          <Text className="text-2xl">✅</Text>
+          <Text className="text-success font-bold text-center text-base">
+            All budgets are on track!
+          </Text>
+        </View>
       </View>
     );
   }
@@ -114,22 +117,22 @@ export default function HomeScreen() {
         {/* Stats Cards */}
         <View className="gap-3 mb-6">
           {/* Total Balance Card */}
-          <View className="bg-gradient-to-r from-primary to-primary/80 rounded-3xl p-6 shadow-lg">
+          <View className="bg-primary rounded-3xl p-6 shadow-lg">
             <Text className="text-sm text-white/80 mb-2 font-medium">Total Balance</Text>
             <Text className="text-4xl font-bold text-white">
               {formatCurrency(stats.netBalance)}
             </Text>
             <View className="mt-4 flex-row gap-4">
-              <View>
-                <Text className="text-xs text-white/70">Income</Text>
-                <Text className="text-lg font-semibold text-white">
+              <View className="flex-1">
+                <Text className="text-xs text-white/70 font-medium">💰 Income</Text>
+                <Text className="text-lg font-bold mt-1" style={{ color: "#22C55E" }}>
                   {formatCurrency(stats.totalIncome)}
                 </Text>
               </View>
               <View className="w-px bg-white/20" />
-              <View>
-                <Text className="text-xs text-white/70">Expense</Text>
-                <Text className="text-lg font-semibold text-white">
+              <View className="flex-1">
+                <Text className="text-xs text-white/70 font-medium">💸 Expense</Text>
+                <Text className="text-lg font-bold mt-1" style={{ color: "#EF4444" }}>
                   {formatCurrency(stats.totalExpense)}
                 </Text>
               </View>

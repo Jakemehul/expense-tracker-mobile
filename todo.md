@@ -110,3 +110,10 @@
 - [x] Improve home screen card layouts
 - [x] Add subtle shadows and rounded corners
 - [x] Test UI improvements across all screens (65 tests passing)
+
+## Color & Visibility Fixes
+
+- [x] Fix Total Balance card colors - separate green for income, red for expense
+- [x] Improve Total Balance card visibility with better contrast
+- [x] Fix "All budgets on track" message visibility
+- [x] Make budget status card more prominent
