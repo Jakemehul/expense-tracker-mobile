@@ -1,4 +1,11 @@
-import { ScrollView, Text, View, TouchableOpacity, FlatList, Pressable } from "react-native";
+import {
+  ScrollView,
+  Text,
+  View,
+  Pressable,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import { useRouter } from "expo-router";
 import { ScreenContainer } from "@/components/screen-container";
 import { useTransactions } from "@/lib/transaction-context";
@@ -19,8 +26,10 @@ function BudgetWarnings() {
 
   if (budgetStatuses.length === 0) {
     return (
-      <View className="bg-surface rounded-2xl p-4 border border-border">
-        <Text className="text-muted text-center text-sm">All budgets are on track ✓</Text>
+      <View className="bg-success/10 rounded-2xl p-4 border border-success/30">
+        <Text className="text-success text-center text-sm font-medium">
+          ✓ All budgets are on track
+        </Text>
       </View>
     );
   }
@@ -36,7 +45,7 @@ function BudgetWarnings() {
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { transactions, isLoading } = useTransactions();
+  const { transactions, isLoading, categories } = useTransactions();
   const { budgets } = useBudgets();
   const colors = useColors();
 
@@ -73,6 +82,10 @@ export default function HomeScreen() {
       .slice(0, 5);
   }, [transactions]);
 
+  const getCategoryInfo = (categoryName: string) => {
+    return categories.find((c) => c.name === categoryName);
+  };
+
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-IN", {
       style: "currency",
@@ -101,29 +114,25 @@ export default function HomeScreen() {
         {/* Stats Cards */}
         <View className="gap-3 mb-6">
           {/* Total Balance Card */}
-          <View className="bg-primary rounded-2xl p-6">
-            <Text className="text-sm text-white opacity-80 mb-2">Total Balance</Text>
-            <Text className="text-3xl font-bold text-white">
+          <View className="bg-gradient-to-r from-primary to-primary/80 rounded-3xl p-6 shadow-lg">
+            <Text className="text-sm text-white/80 mb-2 font-medium">Total Balance</Text>
+            <Text className="text-4xl font-bold text-white">
               {formatCurrency(stats.netBalance)}
             </Text>
-          </View>
-
-          {/* Income & Expense Row */}
-          <View className="flex-row gap-3">
-            {/* Income Card */}
-            <View className="flex-1 bg-surface rounded-2xl p-4 border border-border">
-              <Text className="text-xs text-muted mb-1">Income</Text>
-              <Text className="text-xl font-bold" style={{ color: "#22C55E" }}>
-                {formatCurrency(stats.totalIncome)}
-              </Text>
-            </View>
-
-            {/* Expense Card */}
-            <View className="flex-1 bg-surface rounded-2xl p-4 border border-border">
-              <Text className="text-xs text-muted mb-1">Expense</Text>
-              <Text className="text-xl font-bold" style={{ color: "#EF4444" }}>
-                {formatCurrency(stats.totalExpense)}
-              </Text>
+            <View className="mt-4 flex-row gap-4">
+              <View>
+                <Text className="text-xs text-white/70">Income</Text>
+                <Text className="text-lg font-semibold text-white">
+                  {formatCurrency(stats.totalIncome)}
+                </Text>
+              </View>
+              <View className="w-px bg-white/20" />
+              <View>
+                <Text className="text-xs text-white/70">Expense</Text>
+                <Text className="text-lg font-semibold text-white">
+                  {formatCurrency(stats.totalExpense)}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
@@ -132,9 +141,9 @@ export default function HomeScreen() {
         {budgets.length > 0 && (
           <View className="mb-6">
             <View className="flex-row justify-between items-center mb-3">
-              <Text className="text-lg font-semibold text-foreground">Budget Status</Text>
+              <Text className="text-lg font-bold text-foreground">💰 Budget Status</Text>
               <Pressable onPress={() => router.push("../budget-settings")}>
-                <Text className="text-sm text-primary font-medium">Manage</Text>
+                <Text className="text-sm text-primary font-semibold">Manage</Text>
               </Pressable>
             </View>
 
@@ -145,9 +154,9 @@ export default function HomeScreen() {
         {/* Recent Transactions Section */}
         <View className="mb-6">
           <View className="flex-row justify-between items-center mb-3">
-            <Text className="text-lg font-semibold text-foreground">Recent Transactions</Text>
+            <Text className="text-lg font-bold text-foreground">📊 Recent Transactions</Text>
             <Pressable onPress={() => router.push("/transactions")}>
-              <Text className="text-sm text-primary font-medium">View All</Text>
+              <Text className="text-sm text-primary font-semibold">View All</Text>
             </Pressable>
           </View>
 
@@ -156,8 +165,11 @@ export default function HomeScreen() {
               <Text className="text-muted text-center">Loading...</Text>
             </View>
           ) : recentTransactions.length === 0 ? (
-            <View className="bg-surface rounded-2xl p-6 items-center">
-              <Text className="text-muted text-center mb-2">No transactions yet</Text>
+            <View className="bg-surface rounded-2xl p-6 items-center border border-border">
+              <Text className="text-4xl mb-2">📭</Text>
+              <Text className="text-foreground font-semibold text-center mb-1">
+                No transactions yet
+              </Text>
               <Text className="text-xs text-muted text-center">
                 Tap the + button to add your first transaction
               </Text>
@@ -167,46 +179,55 @@ export default function HomeScreen() {
               scrollEnabled={false}
               data={recentTransactions}
               keyExtractor={(item) => item.id}
-              renderItem={({ item }) => (
-                <Pressable
-                  onPress={() => {}}
-                  style={({ pressed }) => [
-                    {
-                      opacity: pressed ? 0.7 : 1,
-                    },
-                  ]}
-                >
-                  <View className="bg-surface rounded-xl p-3 mb-2 flex-row items-center justify-between border border-border">
-                    <View className="flex-row items-center flex-1">
-                      <Text className="text-2xl mr-3">{item.category}</Text>
-                      <View className="flex-1">
-                        <Text className="text-sm font-medium text-foreground">
-                          {item.description || "Transaction"}
-                        </Text>
-                        <Text className="text-xs text-muted">{formatDate(item.date)}</Text>
-                      </View>
-                    </View>
-                    <Text
-                      className="text-sm font-semibold"
+              renderItem={({ item }) => {
+                const categoryInfo = getCategoryInfo(item.category);
+                const isIncome = item.type === "income";
+
+                return (
+                  <Pressable
+                    onPress={() => {}}
+                    style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
+                  >
+                    <View
+                      className="bg-surface rounded-2xl p-3 mb-2 flex-row items-center justify-between border border-border"
                       style={{
-                        color: item.type === "income" ? "#22C55E" : "#EF4444",
+                        borderLeftWidth: 4,
+                        borderLeftColor: isIncome ? "#22C55E" : "#EF4444",
                       }}
                     >
-                      {item.type === "income" ? "+" : "-"}
-                      {formatCurrency(item.amount)}
-                    </Text>
-                  </View>
-                </Pressable>
-              )}
+                      <View className="flex-row items-center flex-1 gap-3">
+                        {categoryInfo && (
+                          <View
+                            className="w-10 h-10 rounded-full items-center justify-center"
+                            style={{
+                              backgroundColor: categoryInfo.color + "20",
+                            }}
+                          >
+                            <Text className="text-lg">{categoryInfo.icon}</Text>
+                          </View>
+                        )}
+                        <View className="flex-1">
+                          <Text className="text-sm font-semibold text-foreground">
+                            {item.description || "Transaction"}
+                          </Text>
+                          <Text className="text-xs text-muted">{formatDate(item.date)}</Text>
+                        </View>
+                      </View>
+                      <Text
+                        className="text-sm font-bold"
+                        style={{
+                          color: isIncome ? "#22C55E" : "#EF4444",
+                        }}
+                      >
+                        {isIncome ? "+" : "-"}
+                        {formatCurrency(item.amount)}
+                      </Text>
+                    </View>
+                  </Pressable>
+                );
+              }}
             />
           )}
-        </View>
-
-        {/* Quick Add Button Info */}
-        <View className="bg-surface rounded-2xl p-4 border border-border">
-          <Text className="text-xs text-muted text-center">
-            Tap the + button below to add a new transaction
-          </Text>
         </View>
       </ScrollView>
 
@@ -217,21 +238,21 @@ export default function HomeScreen() {
           position: "absolute",
           bottom: 80,
           right: 20,
-          width: 56,
-          height: 56,
-          borderRadius: 28,
+          width: 60,
+          height: 60,
+          borderRadius: 30,
           backgroundColor: colors.primary,
           justifyContent: "center",
           alignItems: "center",
           shadowColor: "#000",
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-          elevation: 5,
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.3,
+          shadowRadius: 4.65,
+          elevation: 8,
         }}
         activeOpacity={0.8}
       >
-        <Text className="text-2xl text-white font-bold">+</Text>
+        <Text className="text-3xl text-white font-bold">+</Text>
       </TouchableOpacity>
     </ScreenContainer>
   );
