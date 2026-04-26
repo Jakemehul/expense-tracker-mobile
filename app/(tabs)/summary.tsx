@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import { ScreenContainer } from "@/components/screen-container";
 import { useTransactions } from "@/lib/transaction-context";
+import { formatCategoryName } from "@/lib/types";
 import { useState, useMemo } from "react";
 
 export default function SummaryScreen() {
@@ -168,7 +169,7 @@ export default function SummaryScreen() {
                         )}
                         <View className="flex-1">
                           <Text className="text-sm font-bold text-white">
-                            {item.id}
+                            {formatCategoryName(item.id)}
                           </Text>
                           <Text className="text-xs text-gray-300 mt-0.5">
                             Transactions

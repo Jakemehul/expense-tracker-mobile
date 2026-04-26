@@ -59,16 +59,27 @@ export interface MonthlySummary {
 }
 
 /**
+ * Utility function to capitalize first letter of category name for display
+ */
+export const formatCategoryName = (categoryName: string): string => {
+  return categoryName
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+};
+
+/**
  * Default categories
  */
 export const DEFAULT_CATEGORIES: Category[] = [
   // Expense categories
-  { id: "food", name: "Food & Dining", icon: "🍔", color: "#FF6B6B", type: "expense" },
+  { id: "food", name: "Food", icon: "🍔", color: "#FF6B6B", type: "expense" },
+  { id: "groceries", name: "Groceries", icon: "🛒", color: "#FF9F43", type: "expense" },
   { id: "transport", name: "Transport", icon: "🚗", color: "#4ECDC4", type: "expense" },
   { id: "utilities", name: "Utilities", icon: "💡", color: "#FFE66D", type: "expense" },
   { id: "entertainment", name: "Entertainment", icon: "🎬", color: "#A8E6CF", type: "expense" },
   { id: "shopping", name: "Shopping", icon: "🛍️", color: "#FF8B94", type: "expense" },
-  { id: "health", name: "Health & Fitness", icon: "💪", color: "#C7CEEA", type: "expense" },
+  { id: "health", name: "Health", icon: "💪", color: "#C7CEEA", type: "expense" },
   { id: "other-expense", name: "Other", icon: "📌", color: "#9BA1A6", type: "expense" },
   
   // Income categories

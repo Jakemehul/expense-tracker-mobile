@@ -11,6 +11,7 @@ import { useRouter } from "expo-router";
 import { ScreenContainer } from "@/components/screen-container";
 import { useTransactions } from "@/lib/transaction-context";
 import { CategoryBadge } from "@/components/category-badge";
+import { formatCategoryName } from "@/lib/types";
 import { useState, useMemo } from "react";
 
 export default function TransactionsScreen() {
@@ -184,7 +185,7 @@ export default function TransactionsScreen() {
                         )}
                         <View className="flex-1">
                           <Text className="text-sm font-semibold text-foreground">
-                            {item.category}
+                            {formatCategoryName(item.category)}
                           </Text>
                           <Text className="text-xs text-muted mt-0.5">
                             {formatDate(item.date)}

@@ -132,3 +132,9 @@
 - [x] Brighten transaction count text
 - [x] Improve percentage text contrast
 - [x] Make section headers more readable
+
+## Category Improvements
+
+- [x] Capitalize first letter of all category names for display
+- [x] Add Groceries category to the list
+- [x] Update category display in transactions and summary screens
