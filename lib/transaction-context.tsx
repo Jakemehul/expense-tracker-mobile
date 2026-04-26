@@ -50,7 +50,17 @@ export function TransactionProvider({ children }: { children: React.ReactNode })
         }
 
         if (categoriesData) {
-          setCategories(JSON.parse(categoriesData));
+          const savedCategories = JSON.parse(categoriesData);
+          // Merge saved categories with new default categories to ensure new ones are included
+          const mergedCategories = [
+            ...savedCategories,
+            ...DEFAULT_CATEGORIES.filter(
+              (defaultCat) => !savedCategories.some((saved: Category) => saved.id === defaultCat.id)
+            ),
+          ];
+          setCategories(mergedCategories);
+          // Update storage with merged categories
+          await AsyncStorage.setItem(CATEGORIES_KEY, JSON.stringify(mergedCategories));
         } else {
           // Save default categories if none exist
           await AsyncStorage.setItem(CATEGORIES_KEY, JSON.stringify(DEFAULT_CATEGORIES));
