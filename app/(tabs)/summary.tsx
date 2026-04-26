@@ -81,7 +81,7 @@ export default function SummaryScreen() {
           <View className="bg-success/10 rounded-2xl p-5 border border-success/30">
             <View className="flex-row items-center justify-between">
               <View>
-                <Text className="text-xs text-success/70 font-medium mb-1">Total Income</Text>
+                <Text className="text-xs text-success font-medium mb-1">Total Income</Text>
                 <Text className="text-3xl font-bold text-success">
                   {formatCurrency(stats.totalIncome)}
                 </Text>
@@ -94,7 +94,7 @@ export default function SummaryScreen() {
           <View className="bg-error/10 rounded-2xl p-5 border border-error/30">
             <View className="flex-row items-center justify-between">
               <View>
-                <Text className="text-xs text-error/70 font-medium mb-1">Total Expense</Text>
+                <Text className="text-xs text-error font-medium mb-1">Total Expense</Text>
                 <Text className="text-3xl font-bold text-error">
                   {formatCurrency(stats.totalExpense)}
                 </Text>
