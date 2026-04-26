@@ -137,13 +137,13 @@ export default function SummaryScreen() {
 
         {/* Category Breakdown */}
         <View>
-          <Text className="text-lg font-bold text-foreground mb-3">📊 Breakdown by Category</Text>
+          <Text className="text-lg font-bold text-white mb-3">📊 Breakdown by Category</Text>
 
           {categoryList.length === 0 ? (
             <View className="bg-surface rounded-2xl p-8 items-center border border-border">
               <Text className="text-4xl mb-2">📭</Text>
-              <Text className="text-foreground font-semibold">No transactions this month</Text>
-              <Text className="text-xs text-muted mt-1">Add transactions to see breakdown</Text>
+              <Text className="text-white font-semibold">No transactions this month</Text>
+              <Text className="text-xs text-gray-300 mt-1">Add transactions to see breakdown</Text>
             </View>
           ) : (
             <FlatList
@@ -167,19 +167,19 @@ export default function SummaryScreen() {
                           </View>
                         )}
                         <View className="flex-1">
-                          <Text className="text-sm font-bold text-foreground">
+                          <Text className="text-sm font-bold text-white">
                             {item.id}
                           </Text>
-                          <Text className="text-xs text-muted mt-0.5">
-                            {item.categoryInfo?.name ? "Category" : "Transactions"}
+                          <Text className="text-xs text-gray-300 mt-0.5">
+                            Transactions
                           </Text>
                         </View>
                       </View>
                       <View className="items-end">
-                        <Text className="text-lg font-bold text-foreground">
+                        <Text className="text-lg font-bold text-white">
                           {formatCurrency(item.amount)}
                         </Text>
-                        <Text className="text-xs text-muted mt-0.5">
+                        <Text className="text-xs text-gray-300 mt-0.5">
                           {item.percentage.toFixed(1)}%
                         </Text>
                       </View>

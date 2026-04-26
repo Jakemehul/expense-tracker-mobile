@@ -125,3 +125,10 @@
 - [x] Fix budget status message with better background contrast
 - [x] Make budget text easily readable without focusing
 - [x] Simplify overall home screen design
+
+## Summary Screen Text Contrast Fixes
+
+- [x] Improve category name visibility on summary cards
+- [x] Brighten transaction count text
+- [x] Improve percentage text contrast
+- [x] Make section headers more readable
