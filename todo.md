@@ -138,3 +138,10 @@
 - [x] Capitalize first letter of all category names for display
 - [x] Add Groceries category to the list
 - [x] Update category display in transactions and summary screens
+
+## Transaction Card Modernization
+
+- [x] Redesign edit and delete buttons with modern styling
+- [x] Improve category name and icon display
+- [x] Add swipe actions or better button layout
+- [x] Enhance overall card visual hierarchy

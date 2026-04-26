@@ -171,63 +171,63 @@ export default function TransactionsScreen() {
                     }}
                   >
                     {/* Top Row: Category Badge and Amount */}
-                    <View className="flex-row items-center justify-between mb-3">
+                    <View className="flex-row items-center justify-between mb-4">
                       <View className="flex-row items-center flex-1 gap-3">
                         {categoryInfo && (
                           <View
-                            className="w-12 h-12 rounded-full items-center justify-center"
+                            className="w-14 h-14 rounded-xl items-center justify-center shadow-sm"
                             style={{
-                              backgroundColor: categoryInfo.color + "20",
+                              backgroundColor: categoryInfo.color + "25",
                             }}
                           >
-                            <Text className="text-2xl">{categoryInfo.icon}</Text>
+                            <Text className="text-3xl">{categoryInfo.icon}</Text>
                           </View>
                         )}
                         <View className="flex-1">
-                          <Text className="text-sm font-semibold text-foreground">
+                          <Text className="text-base font-bold text-foreground">
                             {formatCategoryName(item.category)}
                           </Text>
-                          <Text className="text-xs text-muted mt-0.5">
-                            {formatDate(item.date)}
+                          <Text className="text-xs text-muted mt-1">
+                            {item.description || formatDate(item.date)}
                           </Text>
                         </View>
                       </View>
-                      <Text
-                        className="text-lg font-bold"
-                        style={{
-                          color: isIncome ? "#22C55E" : "#EF4444",
-                        }}
-                      >
-                        {isIncome ? "+" : "-"}
-                        {formatCurrency(item.amount)}
-                      </Text>
+                      <View className="items-end">
+                        <Text
+                          className="text-xl font-bold"
+                          style={{
+                            color: isIncome ? "#22C55E" : "#EF4444",
+                          }}
+                        >
+                          {isIncome ? "+" : "-"}
+                          {formatCurrency(item.amount)}
+                        </Text>
+                        <Text className="text-xs text-muted mt-1">
+                          {formatDate(item.date)}
+                        </Text>
+                      </View>
                     </View>
 
-                    {/* Description */}
-                    {item.description && (
-                      <View className="mb-3 px-3 py-2 bg-background rounded-lg border border-border">
-                        <Text className="text-sm text-foreground">{item.description}</Text>
-                      </View>
-                    )}
-
-                    {/* Action Buttons */}
+                    {/* Action Buttons - Compact Modern Style */}
                     <View className="flex-row gap-2 pt-3 border-t border-border">
                       <Pressable
                         onPress={() => handleEdit(item.id)}
-                        style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
+                        style={({ pressed }) => [{ opacity: pressed ? 0.8 : 1, transform: [{ scale: pressed ? 0.98 : 1 }] }]}
                         className="flex-1"
                       >
-                        <View className="bg-primary rounded-lg py-2.5 items-center">
-                          <Text className="text-white font-semibold text-sm">✏️ Edit</Text>
+                        <View className="bg-primary/10 border border-primary rounded-lg py-3 items-center flex-row justify-center gap-2">
+                          <Text className="text-lg">✏️</Text>
+                          <Text className="text-primary font-semibold text-sm">Edit</Text>
                         </View>
                       </Pressable>
                       <Pressable
                         onPress={() => handleDelete(item.id)}
-                        style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
+                        style={({ pressed }) => [{ opacity: pressed ? 0.8 : 1, transform: [{ scale: pressed ? 0.98 : 1 }] }]}
                         className="flex-1"
                       >
-                        <View className="bg-error rounded-lg py-2.5 items-center">
-                          <Text className="text-white font-semibold text-sm">🗑️ Delete</Text>
+                        <View className="bg-error/10 border border-error rounded-lg py-3 items-center flex-row justify-center gap-2">
+                          <Text className="text-lg">🗑️</Text>
+                          <Text className="text-error font-semibold text-sm">Delete</Text>
                         </View>
                       </Pressable>
                     </View>
