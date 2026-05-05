@@ -151,3 +151,24 @@
 - [x] Remove backend service dependency check
 - [x] Ensure app works fully offline with local storage
 - [x] Test in Expo Go without backend running
+
+## Trending Charts & Analytics (New Feature)
+
+- [x] Create trending chart screen showing 6-month spending history
+- [x] Add overall spending trend chart (all transactions)
+- [x] Add category-wise trend charts (separate chart for each category)
+- [x] Implement chart visualization library (react-native-chart-kit)
+- [x] Show month-by-month spending breakdown
+- [x] Add filters to view specific categories
+- [x] Display spending insights and trends
+
+## Notification Reminders (New Feature)
+
+- [x] Create notification context for managing reminders
+- [x] Add notification settings screen
+- [x] Allow users to set custom reminder times
+- [x] Implement daily/weekly reminder scheduling
+- [x] Add local notifications using expo-notifications
+- [x] Store reminder preferences in AsyncStorage
+- [x] Show notification permission request
+- [x] Test notification delivery (65 tests passing)
