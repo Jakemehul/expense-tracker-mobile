@@ -172,3 +172,7 @@
 - [x] Store reminder preferences in AsyncStorage
 - [x] Show notification permission request
 - [x] Test notification delivery (65 tests passing)
+
+## Bug Fixes
+
+- [x] Show "Expense" and "Income" labels on type toggle buttons immediately (not hidden until tap)

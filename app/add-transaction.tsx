@@ -86,11 +86,11 @@ export default function AddTransactionScreen() {
               }`}
             >
               <Text
-                className={`text-center font-semibold ${
+                className={`text-center font-semibold text-base ${
                   type === "expense" ? "text-white" : "text-foreground"
                 }`}
               >
-                Expense
+                💸 Expense
               </Text>
             </View>
           </Pressable>
@@ -110,11 +110,11 @@ export default function AddTransactionScreen() {
               }`}
             >
               <Text
-                className={`text-center font-semibold ${
+                className={`text-center font-semibold text-base ${
                   type === "income" ? "text-white" : "text-foreground"
                 }`}
               >
-                Income
+                💰 Income
               </Text>
             </View>
           </Pressable>
