@@ -215,3 +215,15 @@
 - [x] Create smooth list item animations
 - [x] Add fade-in animations for content
 - [x] Improve overall interaction feel
+
+## In-App Version Update Notification (New Feature)
+
+- [x] Create backend version endpoint to serve latest version info
+- [x] Build version comparison service with semantic versioning support
+- [x] Create version check hook to fetch and compare versions
+- [x] Build update notification modal component
+- [x] Integrate version checker into app root layout
+- [x] Add 9 tests for version service (comparison, update detection, formatting)
+- [x] Show popup on app startup when update is available
+- [x] Allow users to dismiss or download update
+- [x] Cache version check results to avoid excessive API calls

@@ -20,6 +20,7 @@ import { initManusRuntime, subscribeSafeAreaInsets } from "@/lib/_core/manus-run
 import { TransactionProvider } from "@/lib/transaction-context";
 import { BudgetProvider } from "@/lib/budget-context";
 import { NotificationProvider } from "@/lib/notification-context";
+import { VersionCheckProvider } from "@/lib/version-check-provider";
 
 const DEFAULT_WEB_INSETS: EdgeInsets = { top: 0, right: 0, bottom: 0, left: 0 };
 const DEFAULT_WEB_FRAME: Rect = { x: 0, y: 0, width: 0, height: 0 };
@@ -88,11 +89,13 @@ export default function RootLayout() {
         <TransactionProvider>
           <BudgetProvider>
             <NotificationProvider>
-              <Stack screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="(tabs)" />
-                <Stack.Screen name="oauth/callback" />
-              </Stack>
-              <StatusBar style="auto" />
+              <VersionCheckProvider>
+                <Stack screenOptions={{ headerShown: false }}>
+                  <Stack.Screen name="(tabs)" />
+                  <Stack.Screen name="oauth/callback" />
+                </Stack>
+                <StatusBar style="auto" />
+              </VersionCheckProvider>
             </NotificationProvider>
           </BudgetProvider>
         </TransactionProvider>

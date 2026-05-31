@@ -6,6 +6,13 @@ import { publicProcedure, router } from "./_core/trpc";
 export const appRouter = router({
   // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
   system: systemRouter,
+  version: router({
+    latest: publicProcedure.query(() => ({
+      latestVersion: "1.0.1",
+      downloadUrl: "https://expensetrk-9vdpakjp.manus.space",
+      releaseNotes: "Bug fixes and performance improvements",
+    })),
+  }),
   auth: router({
     me: publicProcedure.query((opts) => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
