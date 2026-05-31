@@ -194,3 +194,24 @@
 - [x] Calculate percentage change from previous week
 - [x] Visual indicators for increase/decrease
 - [x] Display transaction count per category
+
+## Emotional Insights & Budget Breakdown (New Feature)
+
+- [x] Add budget percentage messages (e.g., "You've spent 60% of your budget")
+- [x] Show top spending categories in budget view
+- [x] Add emotional language to budget messages
+- [x] Display category breakdown with amounts and percentages
+- [x] Create pie chart visualization for budget spending
+- [x] Create bar chart visualization for budget spending
+- [x] Add toggle to switch between pie and bar charts
+- [x] Show spending insights with empathetic messaging
+
+## Smooth Animations & Bouncy UI (New Feature)
+
+- [x] Add smooth scale animations on button press
+- [x] Add bouncy spring animations for transitions
+- [x] Improve card entrance animations
+- [x] Add haptic feedback for interactions
+- [x] Create smooth list item animations
+- [x] Add fade-in animations for content
+- [x] Improve overall interaction feel

@@ -1,13 +1,18 @@
-import { ScrollView, Text, View, TouchableOpacity, Pressable, FlatList } from "react-native";
+import { useState, useMemo, useEffect } from "react";
+import { View, Text, ScrollView, TouchableOpacity, Animated } from "react-native";
 import { useRouter } from "expo-router";
 import { ScreenContainer } from "@/components/screen-container";
 import { useBudgets } from "@/lib/budget-context";
+import { useTransactions } from "@/lib/transaction-context";
 import { BudgetStatusCard } from "@/components/budget-status-card";
-import { useMemo } from "react";
+import { PieChart, BarChart } from "react-native-chart-kit";
+import { createBounceAnimation, createFadeInAnimation } from "@/lib/animations";
 
 export default function BudgetsScreen() {
   const router = useRouter();
   const { budgets, getBudgetStatus } = useBudgets();
+  const { transactions } = useTransactions();
+  const [chartType, setChartType] = useState<"pie" | "bar">("pie");
   const now = new Date();
 
   const budgetStatuses = useMemo(() => {
@@ -25,6 +30,7 @@ export default function BudgetsScreen() {
       total,
       spent,
       remaining: total - spent,
+      percentage: total > 0 ? Math.round((spent / total) * 100) : 0,
       exceeded,
       critical,
       warning,
@@ -32,12 +38,68 @@ export default function BudgetsScreen() {
     };
   }, [budgetStatuses]);
 
+  // Get top spending categories
+  const topCategories = useMemo(() => {
+    const categoryTotals: { [key: string]: number } = {};
+    transactions
+      .filter((t) => t.type === "expense" && t.date.getMonth() === now.getMonth())
+      .forEach((t) => {
+        categoryTotals[t.category] = (categoryTotals[t.category] || 0) + t.amount;
+      });
+
+    return Object.entries(categoryTotals)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 5)
+      .map(([category, amount]) => ({ category, amount }));
+  }, [transactions, now]);
+
+  const chartData = useMemo(() => {
+    if (topCategories.length === 0) return null;
+
+    const labels = topCategories.map((c) => c.category.substring(0, 8));
+    const data = topCategories.map((c) => c.amount);
+
+    return {
+      labels,
+      datasets: [
+        {
+          data,
+          colors: [
+            () => "#0a7ea4",
+            () => "#22C55E",
+            () => "#F59E0B",
+            () => "#EF4444",
+            () => "#8B5CF6",
+          ],
+        },
+      ],
+    };
+  }, [topCategories]);
+
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-IN", {
       style: "currency",
       currency: "INR",
     }).format(amount);
   };
+
+  // Get emotional message based on spending
+  const getEmotionalMessage = () => {
+    const percentage = stats.percentage;
+    if (percentage < 25) return "🎉 Great job! You're spending wisely!";
+    if (percentage < 50) return "💪 You're doing well! Keep it up!";
+    if (percentage < 75) return "⚠️ You've spent 60% of your budget. Be careful!";
+    if (percentage < 90) return "🚨 You're getting close to your limit!";
+    if (percentage < 100) return "⛔ You're almost at your budget limit!";
+    return "❌ You've exceeded your budget. Time to cut back!";
+  };
+
+  const { scale: bounceScale, bounce: triggerBounce } = createBounceAnimation();
+  const { opacity: fadeOpacity, fadeIn } = createFadeInAnimation();
+
+  useEffect(() => {
+    fadeIn();
+  }, []);
 
   return (
     <ScreenContainer className="p-4">
@@ -47,7 +109,10 @@ export default function BudgetsScreen() {
           <View className="flex-row justify-between items-center mb-2">
             <Text className="text-3xl font-bold text-foreground">Budgets</Text>
             <TouchableOpacity
-              onPress={() => router.push("../budget-settings")}
+              onPress={() => {
+                triggerBounce();
+                router.push("../budget-settings");
+              }}
               className="bg-primary rounded-lg px-4 py-2 active:opacity-80"
               activeOpacity={0.8}
             >
@@ -67,7 +132,10 @@ export default function BudgetsScreen() {
               Set monthly spending limits for different categories to track your finances better.
             </Text>
             <TouchableOpacity
-              onPress={() => router.push("../budget-settings")}
+              onPress={() => {
+                triggerBounce();
+                router.push("../budget-settings");
+              }}
               className="bg-primary rounded-lg px-6 py-3 active:opacity-80"
               activeOpacity={0.8}
             >
@@ -76,7 +144,7 @@ export default function BudgetsScreen() {
           </View>
         ) : (
           <>
-            {/* Overall Summary */}
+            {/* Overall Summary with Emotional Message */}
             <View className="mb-6">
               <Text className="text-sm font-semibold text-muted mb-3 uppercase">
                 Overall Summary
@@ -99,83 +167,179 @@ export default function BudgetsScreen() {
                 </View>
 
                 {/* Progress Bar */}
-                <View className="h-3 bg-border rounded-full overflow-hidden mb-3">
-                  <View
-                    style={{
-                      height: "100%",
-                      width: `${Math.min((stats.spent / stats.total) * 100, 100)}%`,
-                      backgroundColor:
-                        stats.spent > stats.total
-                          ? "#EF4444"
-                          : stats.spent / stats.total > 0.9
-                            ? "#FF8B94"
-                            : stats.spent / stats.total > 0.75
-                              ? "#FFE66D"
-                              : "#22C55E",
-                    }}
-                  />
+                <View className="mb-3">
+                  <View className="bg-border rounded-full h-2 overflow-hidden">
+                    <View
+                      className="h-full"
+                      style={{
+                        width: `${Math.min(stats.percentage, 100)}%`,
+                        backgroundColor:
+                          stats.percentage < 75
+                            ? "#22C55E"
+                            : stats.percentage < 90
+                              ? "#F59E0B"
+                              : "#EF4444",
+                      }}
+                    />
+                  </View>
+                  <Text className="text-xs text-muted mt-1">
+                    {stats.percentage}% spent • {formatCurrency(stats.remaining)} remaining
+                  </Text>
                 </View>
 
-                <View className="flex-row justify-between">
-                  <Text className="text-xs text-muted">
-                    {((stats.spent / stats.total) * 100).toFixed(0)}% spent
-                  </Text>
-                  <Text className="text-xs text-muted">
-                    {formatCurrency(Math.max(0, stats.remaining))} remaining
+                {/* Emotional Message */}
+                <View className="bg-background rounded-lg p-3 border border-border">
+                  <Text className="text-sm text-foreground font-semibold">
+                    {getEmotionalMessage()}
                   </Text>
                 </View>
               </View>
 
-              {/* Status Cards */}
-              <View className="flex-row gap-2 flex-wrap">
-                <View className="flex-1 bg-surface rounded-lg p-3 border border-border">
-                  <Text className="text-xs text-muted mb-1">On Track</Text>
-                  <Text className="text-lg font-bold text-foreground">{stats.safe}</Text>
+              {/* Status Summary */}
+              <View className="flex-row justify-between gap-2">
+                <View className="flex-1 bg-surface rounded-lg p-3 border border-border items-center">
+                  <Text className="text-2xl font-bold text-green-500">{stats.safe}</Text>
+                  <Text className="text-xs text-muted mt-1">Safe</Text>
                 </View>
-                <View className="flex-1 bg-surface rounded-lg p-3 border border-border">
-                  <Text className="text-xs text-muted mb-1">Caution</Text>
-                  <Text className="text-lg font-bold" style={{ color: "#FFE66D" }}>
-                    {stats.warning}
-                  </Text>
+                <View className="flex-1 bg-surface rounded-lg p-3 border border-border items-center">
+                  <Text className="text-2xl font-bold text-yellow-500">{stats.warning}</Text>
+                  <Text className="text-xs text-muted mt-1">Warning</Text>
                 </View>
-                <View className="flex-1 bg-surface rounded-lg p-3 border border-border">
-                  <Text className="text-xs text-muted mb-1">Alert</Text>
-                  <Text className="text-lg font-bold" style={{ color: "#FF8B94" }}>
-                    {stats.critical}
-                  </Text>
+                <View className="flex-1 bg-surface rounded-lg p-3 border border-border items-center">
+                  <Text className="text-2xl font-bold text-orange-500">{stats.critical}</Text>
+                  <Text className="text-xs text-muted mt-1">Critical</Text>
                 </View>
-                <View className="flex-1 bg-surface rounded-lg p-3 border border-border">
-                  <Text className="text-xs text-muted mb-1">Over Budget</Text>
-                  <Text className="text-lg font-bold" style={{ color: "#EF4444" }}>
-                    {stats.exceeded}
-                  </Text>
+                <View className="flex-1 bg-surface rounded-lg p-3 border border-border items-center">
+                  <Text className="text-2xl font-bold text-red-500">{stats.exceeded}</Text>
+                  <Text className="text-xs text-muted mt-1">Exceeded</Text>
                 </View>
               </View>
             </View>
 
-            {/* Budget Details */}
-            <View>
-              <Text className="text-sm font-semibold text-muted mb-3 uppercase">
-                Category Budgets
-              </Text>
+            {/* Top Spending Categories */}
+            {topCategories.length > 0 && (
+              <View className="mb-6">
+                <View className="flex-row justify-between items-center mb-3">
+                  <Text className="text-sm font-semibold text-muted uppercase">
+                    Top Spending Categories
+                  </Text>
+                  <View className="flex-row gap-2">
+                    <TouchableOpacity
+                      onPress={() => {
+                        triggerBounce();
+                        setChartType("pie");
+                      }}
+                      className={`px-3 py-1 rounded-lg ${
+                        chartType === "pie"
+                          ? "bg-primary"
+                          : "bg-surface border border-border"
+                      }`}
+                      activeOpacity={0.8}
+                    >
+                      <Text
+                        className={`text-xs font-semibold ${
+                          chartType === "pie" ? "text-white" : "text-foreground"
+                        }`}
+                      >
+                        Pie
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => {
+                        triggerBounce();
+                        setChartType("bar");
+                      }}
+                      className={`px-3 py-1 rounded-lg ${
+                        chartType === "bar"
+                          ? "bg-primary"
+                          : "bg-surface border border-border"
+                      }`}
+                      activeOpacity={0.8}
+                    >
+                      <Text
+                        className={`text-xs font-semibold ${
+                          chartType === "bar" ? "text-white" : "text-foreground"
+                        }`}
+                      >
+                        Bar
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
 
-              <FlatList
-                scrollEnabled={false}
-                data={budgetStatuses}
-                keyExtractor={(item) => item.categoryId}
-                renderItem={({ item }) => (
-                  <BudgetStatusCard status={item} compact={false} />
+                {chartData && (
+                  <View className="bg-surface rounded-2xl p-4 border border-border">
+                    {chartType === "pie" ? (
+                      <PieChart
+                        data={chartData as any}
+                        width={300}
+                        height={220}
+                        chartConfig={{
+                          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                          backgroundColor: "#1e2022",
+                          backgroundGradientFrom: "#1e2022",
+                          backgroundGradientTo: "#1e2022",
+                        }}
+                        accessor="data"
+                        backgroundColor="transparent"
+                        paddingLeft="0"
+                        absolute
+                      />
+                    ) : (
+                      <BarChart
+                        data={chartData as any}
+                        width={300}
+                        height={220}
+                        yAxisLabel=""
+                        yAxisSuffix=""
+                        chartConfig={{
+                          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                          backgroundColor: "#1e2022",
+                          backgroundGradientFrom: "#1e2022",
+                          backgroundGradientTo: "#1e2022",
+                          decimalPlaces: 0,
+                          barPercentage: 0.7,
+                        }}
+                        style={{ marginLeft: -40 }}
+                      />
+                    )}
+                  </View>
                 )}
-              />
-            </View>
 
-            {/* Tips Section */}
-            <View className="bg-surface rounded-2xl p-4 border border-border mt-6">
-              <Text className="text-sm font-semibold text-foreground mb-2">💡 Tips</Text>
-              <Text className="text-xs text-muted leading-relaxed">
-                Set realistic budgets based on your spending patterns. Review and adjust monthly to
-                stay on track with your financial goals.
+                {/* Category Details */}
+                <View className="mt-4 gap-2">
+                  {topCategories.map((cat, idx) => (
+                    <View key={idx} className="bg-surface rounded-lg p-3 border border-border">
+                      <View className="flex-row justify-between items-center">
+                        <Text className="text-sm font-semibold text-foreground">
+                          {cat.category}
+                        </Text>
+                        <Text className="text-sm font-bold text-primary">
+                          {formatCurrency(cat.amount)}
+                        </Text>
+                      </View>
+                      <Text className="text-xs text-muted mt-1">
+                        {(
+                          (cat.amount /
+                            topCategories.reduce((sum, c) => sum + c.amount, 0)) *
+                          100
+                        ).toFixed(1)}
+                        % of spending
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            )}
+
+            {/* Budget Status Cards */}
+            <View className="mb-6">
+              <Text className="text-sm font-semibold text-muted mb-3 uppercase">
+                Budget Details
               </Text>
+              {budgetStatuses.map((status) => (
+                <BudgetStatusCard key={status.categoryId} status={status} />
+              ))}
             </View>
           </>
         )}
