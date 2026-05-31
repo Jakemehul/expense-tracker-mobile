@@ -176,3 +176,21 @@
 ## Bug Fixes
 
 - [x] Show "Expense" and "Income" labels on type toggle buttons immediately (not hidden until tap)
+
+## Smart Spending Insights (New Feature)
+
+- [x] Analyze spending patterns by day of week
+- [x] Analyze spending patterns by category
+- [x] Compare current week vs previous week spending
+- [x] Generate insight messages (e.g., "You spent more on Food this Friday")
+- [x] Detect recurring spending habits
+- [x] Show percentage changes in spending
+- [x] Display insights on home or summary screen
+
+## Weekly Category Summary (New Feature)
+
+- [x] Create weekly summary view showing all categories
+- [x] Show weekly totals for each category
+- [x] Calculate percentage change from previous week
+- [x] Visual indicators for increase/decrease
+- [x] Display transaction count per category
