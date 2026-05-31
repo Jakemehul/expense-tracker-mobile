@@ -10,7 +10,15 @@ export const appRouter = router({
     latest: publicProcedure.query(() => ({
       latestVersion: "1.0.1",
       downloadUrl: "https://expensetrk-9vdpakjp.manus.space",
-      releaseNotes: "Bug fixes and performance improvements",
+      releaseNotes: "Important updates and improvements",
+      changelog: [
+        "Fixed TypeScript type errors in chart components",
+        "Improved app performance and responsiveness",
+        "Enhanced budget tracking accuracy",
+        "Better dark mode support",
+        "Optimized AsyncStorage for faster data access",
+      ],
+      forceUpdate: false,
     })),
   }),
   auth: router({

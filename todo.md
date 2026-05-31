@@ -227,3 +227,18 @@
 - [x] Show popup on app startup when update is available
 - [x] Allow users to dismiss or download update
 - [x] Cache version check results to avoid excessive API calls
+
+## Advanced Version Update Features
+
+- [x] Persistent dismissal with 7-day cooldown using AsyncStorage
+- [x] Track dismissal timestamp and version to prevent repeated notifications
+- [x] Enhanced update modal with expandable changelog display
+- [x] Scrollable changelog list with bullet points and formatting
+- [x] Backend support for changelog array with detailed entries
+- [x] Force update flag for critical security patches
+- [x] Prevent dismissal when force update is enabled
+- [x] Show warning message for force updates
+- [x] Updated version check hook to handle dismissal logic
+- [x] Updated provider to respect force update settings
+- [x] 13 comprehensive tests for dismissal service (cooldown, timestamps, edge cases)
+- [x] All 87 tests passing

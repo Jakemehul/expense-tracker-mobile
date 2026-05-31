@@ -6,6 +6,8 @@ export interface VersionInfo {
   latestVersion: string;
   downloadUrl: string;
   releaseNotes: string;
+  changelog?: string[]; // Detailed changelog entries
+  forceUpdate?: boolean; // If true, user cannot dismiss the update
 }
 
 /**
