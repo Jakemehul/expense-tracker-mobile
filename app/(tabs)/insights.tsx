@@ -4,10 +4,15 @@ import { useTransactions } from '@/lib/transaction-context';
 import { generateSpendingInsights, getWeeklyCategorySummary } from '@/lib/insights-service';
 import { DEFAULT_CATEGORIES } from '@/lib/types';
 import { useColors } from '@/hooks/use-colors';
+import { useState } from 'react';
+import { getWeeklySpendingTrends, getMonthlySpendingTrends } from '@/lib/spending-trends-service';
+import { SpendingTrendsChart } from '@/components/spending-trends-chart';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function InsightsScreen() {
   const { transactions } = useTransactions();
   const colors = useColors();
+  const [trendPeriod, setTrendPeriod] = useState<'week' | 'month'>('week');
 
   // Build category icons and colors maps
   const categoryIcons: Record<string, string> = {};
@@ -20,6 +25,9 @@ export default function InsightsScreen() {
 
   const insights = generateSpendingInsights(transactions);
   const weeklySummary = getWeeklyCategorySummary(transactions, categoryIcons, categoryColors);
+  const weeklyTrends = getWeeklySpendingTrends(transactions);
+  const monthlyTrends = getMonthlySpendingTrends(transactions);
+  const currentTrends = trendPeriod === 'week' ? weeklyTrends : monthlyTrends;
 
   return (
     <ScreenContainer className="p-4">
@@ -75,6 +83,42 @@ export default function InsightsScreen() {
                 <Text className="text-muted">No significant spending changes this week</Text>
               </View>
             )}
+          </View>
+
+          {/* Spending Trends */}
+          <View className="gap-3">
+            <View className="flex-row items-center justify-between">
+              <Text className="text-lg font-semibold text-foreground">📊 Spending Trends</Text>
+              <View className="flex-row gap-2">
+                <Pressable
+                  onPress={() => setTrendPeriod('week')}
+                  className={`px-4 py-2 rounded-full ${
+                    trendPeriod === 'week' ? 'bg-primary' : 'bg-surface border border-border'
+                  }`}
+                  style={trendPeriod === 'week' ? {} : { borderColor: colors.border }}
+                >
+                  <Text className={`text-sm font-semibold ${
+                    trendPeriod === 'week' ? 'text-background' : 'text-foreground'
+                  }`}>
+                    Week
+                  </Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => setTrendPeriod('month')}
+                  className={`px-4 py-2 rounded-full ${
+                    trendPeriod === 'month' ? 'bg-primary' : 'bg-surface border border-border'
+                  }`}
+                  style={trendPeriod === 'month' ? {} : { borderColor: colors.border }}
+                >
+                  <Text className={`text-sm font-semibold ${
+                    trendPeriod === 'month' ? 'text-background' : 'text-foreground'
+                  }`}>
+                    Month
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
+            <SpendingTrendsChart data={currentTrends} period={trendPeriod} />
           </View>
 
           {/* Weekly Category Summary */}

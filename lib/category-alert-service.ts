@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getAlertThresholds } from "./alert-threshold-service";
 
 const CATEGORY_ALERT_KEY = "@expense_tracker_category_alerts";
-const ALERT_THRESHOLD = 0.8; // 80% of budget
 
 export interface CategoryAlertRecord {
   categoryId: string;
@@ -46,10 +46,12 @@ export async function shouldAlertForCategory(
   // If no budget set or invalid, can't alert
   if (!limit || limit <= 0) return false;
 
+  const thresholds = await getAlertThresholds();
+  const threshold = thresholds.categoryThreshold / 100;
   const percentage = spent / limit;
 
   // If spending is below threshold, no alert needed
-  if (percentage < ALERT_THRESHOLD) return false;
+  if (percentage < threshold) return false;
 
   try {
     const alerts = await getCategoryAlerts();
@@ -114,6 +116,7 @@ export async function getCategoryAlertsToShow(
   categories: any[]
 ): Promise<CategoryAlertRecord[]> {
   const today = new Date().toISOString().split("T")[0];
+  const thresholds = await getAlertThresholds();
   const alerts: CategoryAlertRecord[] = [];
 
   // Check each budget
@@ -136,8 +139,8 @@ export async function getCategoryAlertsToShow(
     const spent = monthTransactions.reduce((sum, t) => sum + t.amount, 0);
     const percentage = budget.limit > 0 ? (spent / budget.limit) * 100 : 0;
 
-    // Check if should alert
-    if (percentage >= 80) {
+    // Check if should alert based on user's custom threshold
+    if (percentage >= thresholds.categoryThreshold) {
       const categoryAlerts = await getCategoryAlerts();
       const categoryAlert = categoryAlerts[budget.categoryId];
 

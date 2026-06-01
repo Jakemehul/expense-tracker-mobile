@@ -281,3 +281,17 @@
 - [x] Store category alert records with AsyncStorage
 - [x] Add 12 comprehensive tests for category alert service
 - [x] All 140 tests passing (2 skipped)
+
+
+## Customizable Alert Thresholds & Spending Trends (New Features)
+
+- [x] Create alert threshold settings service with customizable percentages
+- [x] Update category alert service to use custom thresholds instead of hardcoded 80%
+- [x] Create spending trends calculation service for weekly and monthly analysis
+- [x] Build spending trends chart component with line chart visualization
+- [x] Add weekly/monthly toggle to insights screen
+- [x] Display daily breakdown with progress bars in trends
+- [x] Add trend direction indicators (up/down/stable) with colors
+- [x] Add 20 comprehensive tests for alert threshold service
+- [x] Add 12 comprehensive tests for spending trends service
+- [x] All 164 tests passing (2 skipped)
