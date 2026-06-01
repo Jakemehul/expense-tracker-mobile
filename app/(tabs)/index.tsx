@@ -24,6 +24,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { SettingsModal } from "@/components/settings-modal";
 import { WeeklyReport } from "@/components/weekly-report";
 import { generateWeeklyReport } from "@/lib/weekly-report-service";
+import { CategoryAlertBanner } from "@/components/category-alert-banner";
+import { getCategoryAlertsToShow, recordCategoryAlert } from "@/lib/category-alert-service";
 
 function BudgetWarnings() {
   const { getBudgetStatus } = useBudgets();
@@ -66,6 +68,7 @@ export default function HomeScreen() {
   const [showWeeklyAlert, setShowWeeklyAlert] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showWeeklyReport, setShowWeeklyReport] = useState(false);
+  const [categoryAlerts, setCategoryAlerts] = useState<any[]>([]);
 
   // Get current month stats
   const now = new Date();
@@ -92,6 +95,25 @@ export default function HomeScreen() {
 
     checkWeeklyAlert();
   }, [weeklyAlert]);
+
+  useEffect(() => {
+    const checkCategoryAlerts = async () => {
+      const alerts = await getCategoryAlertsToShow(transactions, budgets, categories);
+      if (alerts.length > 0) {
+        setCategoryAlerts(alerts);
+        for (const alert of alerts) {
+          await recordCategoryAlert(
+            alert.categoryId,
+            alert.categoryName,
+            alert.spent,
+            alert.limit
+          );
+        }
+      }
+    };
+
+    checkCategoryAlerts();
+  }, [transactions, budgets, categories]);
 
   const stats = useMemo(() => {
     const monthTransactions = transactions.filter((t) => {
@@ -131,6 +153,14 @@ export default function HomeScreen() {
 
   return (
     <>
+      {/* Category Alert Banner */}
+      <CategoryAlertBanner
+        visible={categoryAlerts.length > 0}
+        alerts={categoryAlerts}
+        onDismiss={() => setCategoryAlerts([])}
+        onViewBudget={handleViewBudget}
+      />
+
       {/* Weekly Alert Banner */}
       <WeeklyAlertBanner
         visible={showWeeklyAlert}

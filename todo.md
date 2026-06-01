@@ -270,3 +270,14 @@
 - [x] Add 14 comprehensive tests for weekly report service
 - [x] Add 15 comprehensive tests for daily reminder service
 - [x] All 126 tests passing (2 skipped)
+
+
+## Category-Specific Budget Alerts (New Feature)
+
+- [x] Create category budget alert service with 80% threshold detection
+- [x] Build category alert banner component showing multiple categories
+- [x] Integrate category alerts into home screen above weekly alerts
+- [x] Add anti-spam logic to prevent duplicate category alerts per day
+- [x] Store category alert records with AsyncStorage
+- [x] Add 12 comprehensive tests for category alert service
+- [x] All 140 tests passing (2 skipped)
