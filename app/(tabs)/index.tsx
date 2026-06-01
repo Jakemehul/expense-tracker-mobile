@@ -21,9 +21,7 @@ import {
 } from "@/lib/weekly-alert-service";
 import { useEffect } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
-import { SettingsModal } from "@/components/settings-modal";
-import { WeeklyReport } from "@/components/weekly-report";
-import { generateWeeklyReport } from "@/lib/weekly-report-service";
+import { SettingsModalFull } from "@/components/settings-modal-full";
 import { CategoryAlertBanner } from "@/components/category-alert-banner";
 import { getCategoryAlertsToShow, recordCategoryAlert } from "@/lib/category-alert-service";
 
@@ -67,7 +65,6 @@ export default function HomeScreen() {
   const weeklyAlert = useWeeklyAlert();
   const [showWeeklyAlert, setShowWeeklyAlert] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [showWeeklyReport, setShowWeeklyReport] = useState(false);
   const [categoryAlerts, setCategoryAlerts] = useState<any[]>([]);
 
   // Get current month stats
@@ -142,10 +139,6 @@ export default function HomeScreen() {
     return transactions.slice().reverse().slice(0, 5);
   }, [transactions]);
 
-  const weeklyReport = useMemo(() => {
-    return generateWeeklyReport(transactions, categories, transactions);
-  }, [transactions, categories]);
-
   const handleViewBudget = () => {
     setShowWeeklyAlert(false);
     router.push("/(tabs)/budgets");
@@ -171,15 +164,7 @@ export default function HomeScreen() {
       />
 
       {/* Settings Modal */}
-      <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
-
-      {/* Weekly Report Modal */}
-      {showWeeklyReport && (
-        <WeeklyReport
-          report={weeklyReport}
-          onClose={() => setShowWeeklyReport(false)}
-        />
-      )}
+      <SettingsModalFull visible={showSettings} onClose={() => setShowSettings(false)} />
 
       <ScreenContainer className="p-6">
         <ScrollView
@@ -216,60 +201,6 @@ export default function HomeScreen() {
                 color={colors.foreground}
               />
             </TouchableOpacity>
-          </View>
-
-          {/* Weekly Report Button */}
-          <TouchableOpacity
-            onPress={() => setShowWeeklyReport(true)}
-            className="rounded-2xl p-4 mb-6 flex-row items-center justify-between"
-            style={{ backgroundColor: colors.primary }}
-            activeOpacity={0.8}
-          >
-            <View className="flex-row items-center gap-3 flex-1">
-              <MaterialIcons
-                name="assessment"
-                size={24}
-                color={colors.background}
-              />
-              <View className="flex-1">
-                <Text
-                  className="font-semibold"
-                  style={{ color: colors.background }}
-                >
-                  Weekly Report
-                </Text>
-                <Text
-                  className="text-xs"
-                  style={{ color: colors.background, opacity: 0.8 }}
-                >
-                  View spending breakdown
-                </Text>
-              </View>
-            </View>
-            <MaterialIcons
-              name="chevron-right"
-              size={24}
-              color={colors.background}
-            />
-          </TouchableOpacity>
-
-          {/* Balance Card */}
-          <View
-            className="rounded-3xl p-6 mb-6"
-            style={{ backgroundColor: colors.primary }}
-          >
-            <Text
-              className="text-sm font-semibold mb-2"
-              style={{ color: colors.background, opacity: 0.9 }}
-            >
-              Total Balance
-            </Text>
-            <Text
-              className="text-4xl font-bold"
-              style={{ color: colors.background }}
-            >
-              ₹{stats.balance.toFixed(2)}
-            </Text>
           </View>
 
           {/* Income & Expense Cards */}
