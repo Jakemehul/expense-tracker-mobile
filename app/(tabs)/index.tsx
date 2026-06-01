@@ -20,6 +20,10 @@ import {
   recordWeeklyAlert,
 } from "@/lib/weekly-alert-service";
 import { useEffect } from "react";
+import { MaterialIcons } from "@expo/vector-icons";
+import { SettingsModal } from "@/components/settings-modal";
+import { WeeklyReport } from "@/components/weekly-report";
+import { generateWeeklyReport } from "@/lib/weekly-report-service";
 
 function BudgetWarnings() {
   const { getBudgetStatus } = useBudgets();
@@ -60,6 +64,8 @@ export default function HomeScreen() {
   const colors = useColors();
   const weeklyAlert = useWeeklyAlert();
   const [showWeeklyAlert, setShowWeeklyAlert] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [showWeeklyReport, setShowWeeklyReport] = useState(false);
 
   // Get current month stats
   const now = new Date();
@@ -114,6 +120,10 @@ export default function HomeScreen() {
     return transactions.slice().reverse().slice(0, 5);
   }, [transactions]);
 
+  const weeklyReport = useMemo(() => {
+    return generateWeeklyReport(transactions, categories, transactions);
+  }, [transactions, categories]);
+
   const handleViewBudget = () => {
     setShowWeeklyAlert(false);
     router.push("/(tabs)/budgets");
@@ -130,29 +140,88 @@ export default function HomeScreen() {
         onViewBudget={handleViewBudget}
       />
 
+      {/* Settings Modal */}
+      <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
+
+      {/* Weekly Report Modal */}
+      {showWeeklyReport && (
+        <WeeklyReport
+          report={weeklyReport}
+          onClose={() => setShowWeeklyReport(false)}
+        />
+      )}
+
       <ScreenContainer className="p-6">
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 20 }}
         >
-          {/* Header */}
-          <View className="mb-6">
-            <Text
-              className="text-3xl font-bold"
-              style={{ color: colors.foreground }}
+          {/* Header with Settings Button */}
+          <View className="flex-row items-center justify-between mb-6">
+            <View className="flex-1">
+              <Text
+                className="text-3xl font-bold"
+                style={{ color: colors.foreground }}
+              >
+                Expense Tracker
+              </Text>
+              <Text
+                className="text-sm"
+                style={{ color: colors.muted }}
+              >
+                {now.toLocaleDateString("en-US", {
+                  month: "long",
+                  year: "numeric",
+                })}
+              </Text>
+            </View>
+            <TouchableOpacity
+              onPress={() => setShowSettings(true)}
+              className="w-10 h-10 rounded-full items-center justify-center"
+              style={{ backgroundColor: colors.surface }}
             >
-              Expense Tracker
-            </Text>
-            <Text
-              className="text-sm"
-              style={{ color: colors.muted }}
-            >
-              {now.toLocaleDateString("en-US", {
-                month: "long",
-                year: "numeric",
-              })}
-            </Text>
+              <MaterialIcons
+                name="settings"
+                size={24}
+                color={colors.foreground}
+              />
+            </TouchableOpacity>
           </View>
+
+          {/* Weekly Report Button */}
+          <TouchableOpacity
+            onPress={() => setShowWeeklyReport(true)}
+            className="rounded-2xl p-4 mb-6 flex-row items-center justify-between"
+            style={{ backgroundColor: colors.primary }}
+            activeOpacity={0.8}
+          >
+            <View className="flex-row items-center gap-3 flex-1">
+              <MaterialIcons
+                name="assessment"
+                size={24}
+                color={colors.background}
+              />
+              <View className="flex-1">
+                <Text
+                  className="font-semibold"
+                  style={{ color: colors.background }}
+                >
+                  Weekly Report
+                </Text>
+                <Text
+                  className="text-xs"
+                  style={{ color: colors.background, opacity: 0.8 }}
+                >
+                  View spending breakdown
+                </Text>
+              </View>
+            </View>
+            <MaterialIcons
+              name="chevron-right"
+              size={24}
+              color={colors.background}
+            />
+          </TouchableOpacity>
 
           {/* Balance Card */}
           <View

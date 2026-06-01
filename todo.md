@@ -255,3 +255,18 @@
 - [x] Add "View Budget" quick action button in alert
 - [x] Add 14 comprehensive tests for weekly alert service
 - [x] All 101 tests passing
+
+
+## Weekly Reports & Daily Reminders (New Features)
+
+- [x] Create weekly report service with detailed spending breakdown
+- [x] Build weekly report component with category breakdown and insights
+- [x] Create daily reminder service with optional time-based reminders
+- [x] Build settings modal with reminder time picker
+- [x] Add settings button (cogwheel) to home screen top right
+- [x] Integrate weekly report modal into home screen
+- [x] Remove settings from tab bar to reduce clutter
+- [x] Add "Weekly Report" button to home screen
+- [x] Add 14 comprehensive tests for weekly report service
+- [x] Add 15 comprehensive tests for daily reminder service
+- [x] All 126 tests passing (2 skipped)
