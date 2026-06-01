@@ -12,7 +12,14 @@ import { useTransactions } from "@/lib/transaction-context";
 import { useBudgets } from "@/lib/budget-context";
 import { BudgetStatusCard } from "@/components/budget-status-card";
 import { useColors } from "@/hooks/use-colors";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { WeeklyAlertBanner } from "@/components/weekly-alert-banner";
+import { useWeeklyAlert } from "@/hooks/use-weekly-alert";
+import {
+  shouldAlertWeeklyBudget,
+  recordWeeklyAlert,
+} from "@/lib/weekly-alert-service";
+import { useEffect } from "react";
 
 function BudgetWarnings() {
   const { getBudgetStatus } = useBudgets();
@@ -51,16 +58,41 @@ export default function HomeScreen() {
   const { transactions, isLoading, categories } = useTransactions();
   const { budgets } = useBudgets();
   const colors = useColors();
+  const weeklyAlert = useWeeklyAlert();
+  const [showWeeklyAlert, setShowWeeklyAlert] = useState(false);
 
   // Get current month stats
   const now = new Date();
   const currentMonth = now.getMonth();
   const currentYear = now.getFullYear();
 
+  // Check if weekly alert should be shown
+  useEffect(() => {
+    const checkWeeklyAlert = async () => {
+      if (weeklyAlert.shouldAlert && weeklyAlert.weeklyBudget > 0) {
+        const shouldShow = await shouldAlertWeeklyBudget(
+          weeklyAlert.weeklySpent,
+          weeklyAlert.weeklyBudget
+        );
+        if (shouldShow) {
+          setShowWeeklyAlert(true);
+          await recordWeeklyAlert(
+            weeklyAlert.weeklySpent,
+            weeklyAlert.weeklyBudget
+          );
+        }
+      }
+    };
+
+    checkWeeklyAlert();
+  }, [weeklyAlert]);
+
   const stats = useMemo(() => {
     const monthTransactions = transactions.filter((t) => {
       const tDate = new Date(t.date);
-      return tDate.getFullYear() === currentYear && tDate.getMonth() === currentMonth;
+      return (
+        tDate.getFullYear() === currentYear && tDate.getMonth() === currentMonth
+      );
     });
 
     const totalIncome = monthTransactions
@@ -74,193 +106,210 @@ export default function HomeScreen() {
     return {
       totalIncome,
       totalExpense,
-      netBalance: totalIncome - totalExpense,
+      balance: totalIncome - totalExpense,
     };
   }, [transactions, currentMonth, currentYear]);
 
-  // Get recent transactions (last 5)
   const recentTransactions = useMemo(() => {
-    return [...transactions]
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      .slice(0, 5);
+    return transactions.slice().reverse().slice(0, 5);
   }, [transactions]);
 
-  const getCategoryInfo = (categoryName: string) => {
-    return categories.find((c) => c.name === categoryName);
-  };
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-    }).format(amount);
-  };
-
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat("en-IN", {
-      month: "short",
-      day: "numeric",
-    }).format(new Date(date));
+  const handleViewBudget = () => {
+    setShowWeeklyAlert(false);
+    router.push("/(tabs)/budgets");
   };
 
   return (
-    <ScreenContainer className="p-4">
-      <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}>
-        {/* Header */}
-        <View className="mb-6">
-          <Text className="text-3xl font-bold text-foreground">Expense Tracker</Text>
-          <Text className="text-sm text-muted mt-1">
-            {new Intl.DateTimeFormat("en-IN", { month: "long", year: "numeric" }).format(now)}
-          </Text>
-        </View>
+    <>
+      {/* Weekly Alert Banner */}
+      <WeeklyAlertBanner
+        visible={showWeeklyAlert}
+        weeklySpent={weeklyAlert.weeklySpent}
+        weeklyBudget={weeklyAlert.weeklyBudget}
+        onDismiss={() => setShowWeeklyAlert(false)}
+        onViewBudget={handleViewBudget}
+      />
 
-        {/* Stats Cards */}
-        <View className="gap-3 mb-6">
-          {/* Total Balance Card */}
-          <View className="bg-primary rounded-2xl p-6">
-            <Text className="text-sm text-white opacity-80 mb-2">Total Balance</Text>
-            <Text className="text-3xl font-bold text-white">
-              {formatCurrency(stats.netBalance)}
+      <ScreenContainer className="p-6">
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 20 }}
+        >
+          {/* Header */}
+          <View className="mb-6">
+            <Text
+              className="text-3xl font-bold"
+              style={{ color: colors.foreground }}
+            >
+              Expense Tracker
+            </Text>
+            <Text
+              className="text-sm"
+              style={{ color: colors.muted }}
+            >
+              {now.toLocaleDateString("en-US", {
+                month: "long",
+                year: "numeric",
+              })}
             </Text>
           </View>
 
-          {/* Income & Expense Row */}
-          <View className="flex-row gap-3">
-            {/* Income Card */}
-            <View className="flex-1 bg-surface rounded-2xl p-4 border border-border">
-              <Text className="text-xs text-muted mb-1">💰 Income</Text>
-              <Text className="text-xl font-bold" style={{ color: "#22C55E" }}>
-                {formatCurrency(stats.totalIncome)}
+          {/* Balance Card */}
+          <View
+            className="rounded-3xl p-6 mb-6"
+            style={{ backgroundColor: colors.primary }}
+          >
+            <Text
+              className="text-sm font-semibold mb-2"
+              style={{ color: colors.background, opacity: 0.9 }}
+            >
+              Total Balance
+            </Text>
+            <Text
+              className="text-4xl font-bold"
+              style={{ color: colors.background }}
+            >
+              ₹{stats.balance.toFixed(2)}
+            </Text>
+          </View>
+
+          {/* Income & Expense Cards */}
+          <View className="flex-row gap-4 mb-6">
+            <View
+              className="flex-1 rounded-2xl p-4"
+              style={{ backgroundColor: colors.surface }}
+            >
+              <Text
+                className="text-xs font-semibold mb-2"
+                style={{ color: colors.muted }}
+              >
+                💰 Income
+              </Text>
+              <Text
+                className="text-2xl font-bold text-success"
+              >
+                ₹{stats.totalIncome.toFixed(2)}
               </Text>
             </View>
 
-            {/* Expense Card */}
-            <View className="flex-1 bg-surface rounded-2xl p-4 border border-border">
-              <Text className="text-xs text-muted mb-1">💸 Expense</Text>
-              <Text className="text-xl font-bold" style={{ color: "#EF4444" }}>
-                {formatCurrency(stats.totalExpense)}
+            <View
+              className="flex-1 rounded-2xl p-4"
+              style={{ backgroundColor: colors.surface }}
+            >
+              <Text
+                className="text-xs font-semibold mb-2"
+                style={{ color: colors.muted }}
+              >
+                💸 Expense
+              </Text>
+              <Text
+                className="text-2xl font-bold text-error"
+              >
+                ₹{stats.totalExpense.toFixed(2)}
               </Text>
             </View>
           </View>
-        </View>
 
-        {/* Budget Warnings Section */}
-        {budgets.length > 0 && (
+          {/* Budget Warnings */}
           <View className="mb-6">
-            <View className="flex-row justify-between items-center mb-3">
-              <Text className="text-lg font-semibold text-foreground">💰 Budget Status</Text>
-              <Pressable onPress={() => router.push("../budget-settings")}>
-                <Text className="text-sm text-primary font-medium">Manage</Text>
-              </Pressable>
-            </View>
-
             <BudgetWarnings />
           </View>
-        )}
 
-        {/* Recent Transactions Section */}
-        <View className="mb-6">
-          <View className="flex-row justify-between items-center mb-3">
-            <Text className="text-lg font-semibold text-foreground">📊 Recent Transactions</Text>
-            <Pressable onPress={() => router.push("/transactions")}>
-              <Text className="text-sm text-primary font-medium">View All</Text>
-            </Pressable>
-          </View>
-
-          {isLoading ? (
-            <View className="bg-surface rounded-2xl p-4">
-              <Text className="text-muted text-center">Loading...</Text>
-            </View>
-          ) : recentTransactions.length === 0 ? (
-            <View className="bg-surface rounded-2xl p-6 items-center border border-border">
-              <Text className="text-4xl mb-2">📭</Text>
-              <Text className="text-foreground font-semibold text-center mb-1">
-                No transactions yet
+          {/* Recent Transactions */}
+          <View>
+            <View className="flex-row items-center justify-between mb-4">
+              <Text
+                className="text-lg font-bold"
+                style={{ color: colors.foreground }}
+              >
+                📊 Recent Transactions
               </Text>
-              <Text className="text-xs text-muted text-center">
-                Tap the + button to add your first transaction
-              </Text>
+              <TouchableOpacity onPress={() => router.push("/(tabs)/transactions")}>
+                <Text
+                  className="text-sm font-semibold"
+                  style={{ color: colors.primary }}
+                >
+                  View All
+                </Text>
+              </TouchableOpacity>
             </View>
-          ) : (
-            <FlatList
-              scrollEnabled={false}
-              data={recentTransactions}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => {
-                const categoryInfo = getCategoryInfo(item.category);
-                const isIncome = item.type === "income";
 
-                return (
-                  <Pressable
-                    onPress={() => {}}
-                    style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
-                  >
-                    <View
-                      className="bg-surface rounded-xl p-3 mb-2 flex-row items-center justify-between border border-border"
-                      style={{
-                        borderLeftWidth: 4,
-                        borderLeftColor: isIncome ? "#22C55E" : "#EF4444",
-                      }}
+            {isLoading ? (
+              <Text
+                className="text-center py-8"
+                style={{ color: colors.muted }}
+              >
+                Loading...
+              </Text>
+            ) : recentTransactions.length === 0 ? (
+              <View className="items-center py-8">
+                <Text className="text-4xl mb-2">📭</Text>
+                <Text
+                  className="text-center"
+                  style={{ color: colors.muted }}
+                >
+                  No transactions yet
+                </Text>
+                <Text
+                  className="text-center text-xs mt-1"
+                  style={{ color: colors.muted }}
+                >
+                  Tap the + button to add your first transaction
+                </Text>
+              </View>
+            ) : (
+              <FlatList
+                scrollEnabled={false}
+                data={recentTransactions}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => {
+                  const category = categories.find((c) => c.id === item.category);
+                  const isIncome = item.type === "income";
+
+                  return (
+                    <Pressable
+                      onPress={() =>
+                        router.push({
+                          pathname: "/(tabs)/transactions",
+                          params: { id: item.id },
+                        })
+                      }
+                      className="flex-row items-center justify-between py-3 px-4 rounded-xl mb-2"
+                      style={{ backgroundColor: colors.surface }}
                     >
                       <View className="flex-row items-center flex-1 gap-3">
-                        {categoryInfo && (
-                          <View
-                            className="w-10 h-10 rounded-full items-center justify-center"
-                            style={{
-                              backgroundColor: categoryInfo.color + "20",
-                            }}
-                          >
-                            <Text className="text-lg">{categoryInfo.icon}</Text>
-                          </View>
-                        )}
+                        <Text className="text-2xl">{category?.icon || "📌"}</Text>
                         <View className="flex-1">
-                          <Text className="text-sm font-semibold text-foreground">
-                            {item.description || "Transaction"}
+                          <Text
+                            className="font-semibold"
+                            style={{ color: colors.foreground }}
+                          >
+                            {category?.name || "Unknown"}
                           </Text>
-                          <Text className="text-xs text-muted">{formatDate(item.date)}</Text>
+                          <Text
+                            className="text-xs"
+                            style={{ color: colors.muted }}
+                          >
+                            {new Date(item.date).toLocaleDateString()}
+                          </Text>
                         </View>
                       </View>
                       <Text
-                        className="text-sm font-bold"
+                        className="font-bold text-lg"
                         style={{
-                          color: isIncome ? "#22C55E" : "#EF4444",
+                          color: isIncome ? colors.success : colors.error,
                         }}
                       >
-                        {isIncome ? "+" : "-"}
-                        {formatCurrency(item.amount)}
+                        {isIncome ? "+" : "-"}₹{item.amount.toFixed(2)}
                       </Text>
-                    </View>
-                  </Pressable>
-                );
-              }}
-            />
-          )}
-        </View>
-      </ScrollView>
-
-      {/* Floating Action Button */}
-      <TouchableOpacity
-        onPress={() => router.push("../add-transaction")}
-        style={{
-          position: "absolute",
-          bottom: 80,
-          right: 20,
-          width: 60,
-          height: 60,
-          borderRadius: 30,
-          backgroundColor: colors.primary,
-          justifyContent: "center",
-          alignItems: "center",
-          shadowColor: "#000",
-          shadowOffset: { width: 0, height: 4 },
-          shadowOpacity: 0.3,
-          shadowRadius: 4.65,
-          elevation: 8,
-        }}
-        activeOpacity={0.8}
-      >
-        <Text className="text-3xl text-white font-bold">+</Text>
-      </TouchableOpacity>
-    </ScreenContainer>
+                    </Pressable>
+                  );
+                }}
+              />
+            )}
+          </View>
+        </ScrollView>
+      </ScreenContainer>
+    </>
   );
 }

@@ -242,3 +242,16 @@
 - [x] Updated provider to respect force update settings
 - [x] 13 comprehensive tests for dismissal service (cooldown, timestamps, edge cases)
 - [x] All 87 tests passing
+
+## Weekly Spending Alerts (New Feature)
+
+- [x] Create weekly budget alert service with 80% threshold detection
+- [x] Implement week start calculation (Monday-based ISO weeks)
+- [x] Build sleek, non-intrusive alert banner component with smooth slide animation
+- [x] Create weekly alert hook to calculate weekly spending vs budget
+- [x] Integrate alert checks into home screen
+- [x] Add anti-spam logic to prevent duplicate alerts in same week
+- [x] Store dismissal records with AsyncStorage
+- [x] Add "View Budget" quick action button in alert
+- [x] Add 14 comprehensive tests for weekly alert service
+- [x] All 101 tests passing
