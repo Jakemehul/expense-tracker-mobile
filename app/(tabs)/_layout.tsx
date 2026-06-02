@@ -3,7 +3,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { HapticTab } from "@/components/haptic-tab";
 import { IconSymbol } from "@/components/ui/icon-symbol";
-import { Platform } from "react-native";
+import { Platform, Text } from "react-native";
 import { useColors } from "@/hooks/use-colors";
 
 export default function TabLayout() {
@@ -46,21 +46,28 @@ export default function TabLayout() {
         name="insights"
         options={{
           title: "Insights",
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="lightbulb.fill" color={color} />,
+          tabBarIcon: () => <Text style={{ fontSize: 20 }}>💡</Text>,
         }}
       />
       <Tabs.Screen
         name="trends"
         options={{
           title: "Trends",
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="chart.line.uptrend.xyaxis" color={color} />,
+          tabBarIcon: () => <Text style={{ fontSize: 20 }}>📈</Text>,
         }}
       />
       <Tabs.Screen
         name="summary"
         options={{
           title: "Summary",
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="doc.text" color={color} />,
+          tabBarIcon: () => <Text style={{ fontSize: 20 }}>📝</Text>,
+        }}
+      />
+      <Tabs.Screen
+        name="budgets"
+        options={{
+          title: "Budgets",
+          tabBarIcon: () => <Text style={{ fontSize: 20 }}>🎯</Text>,
         }}
       />
     </Tabs>

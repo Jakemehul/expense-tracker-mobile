@@ -21,6 +21,7 @@ import {
 } from "@/lib/weekly-alert-service";
 import { useEffect } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
+import { Animated } from "react-native";
 import { SettingsModalFull } from "@/components/settings-modal-full";
 import { CategoryAlertBanner } from "@/components/category-alert-banner";
 import { getCategoryAlertsToShow, recordCategoryAlert } from "@/lib/category-alert-service";
@@ -66,6 +67,7 @@ export default function HomeScreen() {
   const [showWeeklyAlert, setShowWeeklyAlert] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [categoryAlerts, setCategoryAlerts] = useState<any[]>([]);
+  const [fabScale] = useState(new Animated.Value(1));
 
   // Get current month stats
   const now = new Date();
@@ -142,6 +144,22 @@ export default function HomeScreen() {
   const handleViewBudget = () => {
     setShowWeeklyAlert(false);
     router.push("/(tabs)/budgets");
+  };
+
+  const handleFabPress = () => {
+    Animated.sequence([
+      Animated.timing(fabScale, {
+        toValue: 0.9,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(fabScale, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+    ]).start();
+    router.push("/(tabs)/transactions");
   };
 
   return (
@@ -340,6 +358,30 @@ export default function HomeScreen() {
           </View>
         </ScrollView>
       </ScreenContainer>
+
+      {/* Quick Add FAB */}
+      <Animated.View
+        style={[
+          {
+            position: "absolute",
+            bottom: 80,
+            right: 20,
+            width: 60,
+            height: 60,
+            borderRadius: 30,
+            transform: [{ scale: fabScale }],
+          },
+        ]}
+      >
+        <TouchableOpacity
+          onPress={handleFabPress}
+          className="flex-1 rounded-full items-center justify-center shadow-lg"
+          style={{ backgroundColor: colors.primary }}
+          activeOpacity={0.8}
+        >
+          <Text className="text-3xl">➕</Text>
+        </TouchableOpacity>
+      </Animated.View>
     </>
   );
 }

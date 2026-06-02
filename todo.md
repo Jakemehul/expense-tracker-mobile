@@ -315,3 +315,12 @@
 - [x] Added time picker for daily reminders
 - [x] Restored daily reminder functionality in settings
 - [x] All 164 tests passing
+
+
+## Latest Fixes (Round 2)
+
+- [x] Restored budget add entry button (was already there!)
+- [x] Added emoji icons to tab bar (💡 Insights, 📈 Trends, 📝 Summary, 🎯 Budgets)
+- [x] Added Budgets tab to bottom navigation
+- [x] Added Quick Add FAB (➕) with bouncy animation on home screen
+- [x] All 164 tests passing
