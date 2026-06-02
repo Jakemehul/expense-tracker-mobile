@@ -159,7 +159,7 @@ export default function HomeScreen() {
         useNativeDriver: true,
       }),
     ]).start();
-    router.push("/(tabs)/transactions");
+    router.push("/add-transaction");
   };
 
   return (
