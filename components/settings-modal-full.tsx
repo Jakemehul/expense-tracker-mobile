@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   Text,
@@ -7,12 +7,20 @@ import {
   Alert,
   Modal,
   Pressable,
+  Switch,
 } from "react-native";
 import { useTransactions } from "@/lib/transaction-context";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ExportService } from "@/lib/export-service";
 import { useColors } from "@/hooks/use-colors";
+import {
+  getReminderSettings,
+  updateReminderSettings,
+  formatReminderTime,
+  parseTimeString,
+  createTimeString,
+} from "@/lib/daily-reminder-service";
 
 interface SettingsModalProps {
   visible: boolean;
@@ -27,6 +35,43 @@ export function SettingsModalFull({ visible, onClose }: SettingsModalProps) {
   const { transactions, categories } = useTransactions();
   const colors = useColors();
   const [showExportModal, setShowExportModal] = useState(false);
+  const [reminderEnabled, setReminderEnabled] = useState(false);
+  const [reminderTime, setReminderTime] = useState("09:00");
+  const [showTimeModal, setShowTimeModal] = useState(false);
+  const [selectedHour, setSelectedHour] = useState(9);
+  const [selectedMinute, setSelectedMinute] = useState(0);
+
+  // Load reminder settings on mount
+  useEffect(() => {
+    const loadReminders = async () => {
+      const settings = await getReminderSettings();
+      setReminderEnabled(settings.enabled);
+      setReminderTime(settings.time);
+      const { hours, minutes } = parseTimeString(settings.time);
+      setSelectedHour(hours);
+      setSelectedMinute(minutes);
+    };
+    loadReminders();
+  }, []);
+
+  const handleToggleReminder = async () => {
+    const newState = !reminderEnabled;
+    setReminderEnabled(newState);
+    if (newState) {
+      await updateReminderSettings({ enabled: true, time: reminderTime });
+    } else {
+      await updateReminderSettings({ enabled: false });
+    }
+  };
+
+  const handleSaveTime = async () => {
+    const newTime = createTimeString(selectedHour, selectedMinute);
+    setReminderTime(newTime);
+    if (reminderEnabled) {
+      await updateReminderSettings({ time: newTime });
+    }
+    setShowTimeModal(false);
+  };
 
   const handleExportTransactionsCsv = async () => {
     try {
@@ -136,6 +181,49 @@ export function SettingsModalFull({ visible, onClose }: SettingsModalProps) {
                       {transactions.length}
                     </Text>
                   </View>
+                </View>
+              </View>
+
+              {/* Daily Reminders Section */}
+              <View className="mb-6">
+                <Text className="text-sm font-semibold text-muted mb-3 uppercase">
+                  Notifications
+                </Text>
+                <View
+                  className="rounded-2xl p-4 border"
+                  style={{ borderColor: colors.border, backgroundColor: colors.surface }}
+                >
+                  <View className="flex-row items-center justify-between mb-4">
+                    <View className="flex-1">
+                      <Text className="text-foreground font-semibold">🔔 Daily Reminders</Text>
+                      <Text className="text-xs text-muted mt-1">
+                        Get reminded to log your expenses
+                      </Text>
+                    </View>
+                    <Switch
+                      value={reminderEnabled}
+                      onValueChange={handleToggleReminder}
+                      trackColor={{ false: colors.border, true: colors.primary }}
+                      thumbColor={reminderEnabled ? colors.primary : colors.muted}
+                    />
+                  </View>
+
+                  {reminderEnabled && (
+                    <TouchableOpacity
+                      onPress={() => setShowTimeModal(true)}
+                      className="rounded-lg p-3 border"
+                      style={{ borderColor: colors.border, backgroundColor: colors.background }}
+                    >
+                      <View className="flex-row items-center justify-between">
+                        <Text className="text-foreground font-semibold">
+                          ⏰ Reminder Time
+                        </Text>
+                        <Text className="text-primary font-semibold">
+                          {formatReminderTime(reminderTime)}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  )}
                 </View>
               </View>
 
@@ -258,6 +346,94 @@ export function SettingsModalFull({ visible, onClose }: SettingsModalProps) {
         </View>
       </Modal>
 
+      {/* Time Picker Modal */}
+      <Modal visible={showTimeModal} transparent animationType="slide">
+        <View className="flex-1 bg-black/50 justify-end">
+          <View
+            className="rounded-t-3xl p-6"
+            style={{ backgroundColor: colors.background }}
+          >
+            <View className="mb-6 flex-row items-center justify-between">
+              <Text className="text-2xl font-bold text-foreground">Set Reminder Time</Text>
+              <Pressable onPress={() => setShowTimeModal(false)}>
+                <Text className="text-2xl text-muted">✕</Text>
+              </Pressable>
+            </View>
+
+            <View className="mb-6">
+              <View className="flex-row items-center justify-center gap-4 mb-6">
+                <View className="items-center">
+                  <Text className="text-xs text-muted mb-2">Hour</Text>
+                  <View className="flex-row items-center gap-2">
+                    <TouchableOpacity
+                      onPress={() =>
+                        setSelectedHour((h) => (h === 0 ? 23 : h - 1))
+                      }
+                      className="w-10 h-10 rounded-lg items-center justify-center"
+                      style={{ backgroundColor: colors.surface }}
+                    >
+                      <Text className="text-lg font-bold text-foreground">−</Text>
+                    </TouchableOpacity>
+                    <Text className="text-3xl font-bold text-foreground w-12 text-center">
+                      {selectedHour.toString().padStart(2, "0")}
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() =>
+                        setSelectedHour((h) => (h === 23 ? 0 : h + 1))
+                      }
+                      className="w-10 h-10 rounded-lg items-center justify-center"
+                      style={{ backgroundColor: colors.surface }}
+                    >
+                      <Text className="text-lg font-bold text-foreground">+</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+
+                <Text className="text-3xl font-bold text-foreground">:</Text>
+
+                <View className="items-center">
+                  <Text className="text-xs text-muted mb-2">Minute</Text>
+                  <View className="flex-row items-center gap-2">
+                    <TouchableOpacity
+                      onPress={() =>
+                        setSelectedMinute((m) => (m === 0 ? 59 : m - 1))
+                      }
+                      className="w-10 h-10 rounded-lg items-center justify-center"
+                      style={{ backgroundColor: colors.surface }}
+                    >
+                      <Text className="text-lg font-bold text-foreground">−</Text>
+                    </TouchableOpacity>
+                    <Text className="text-3xl font-bold text-foreground w-12 text-center">
+                      {selectedMinute.toString().padStart(2, "0")}
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() =>
+                        setSelectedMinute((m) => (m === 59 ? 0 : m + 1))
+                      }
+                      className="w-10 h-10 rounded-lg items-center justify-center"
+                      style={{ backgroundColor: colors.surface }}
+                    >
+                      <Text className="text-lg font-bold text-foreground">+</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+
+              <TouchableOpacity
+                onPress={handleSaveTime}
+                className="rounded-lg p-4 active:opacity-80"
+                style={{ backgroundColor: colors.primary }}
+                activeOpacity={0.8}
+              >
+                <Text className="text-white font-semibold text-center text-lg">
+                  Save Time
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
       {/* Export Options Modal */}
       <Modal visible={showExportModal} transparent animationType="slide">
         <View className="flex-1 bg-black/50 justify-end">
@@ -285,7 +461,9 @@ export function SettingsModalFull({ visible, onClose }: SettingsModalProps) {
                 <View className="flex-row items-center justify-between">
                   <View className="flex-1">
                     <Text className="text-foreground font-semibold">📋 All Transactions</Text>
-                    <Text className="text-xs text-muted mt-1">Export {transactions.length} transactions</Text>
+                    <Text className="text-xs text-muted mt-1">
+                      Export {transactions.length} transactions
+                    </Text>
                   </View>
                   <Text className="text-muted">→</Text>
                 </View>

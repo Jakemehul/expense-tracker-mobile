@@ -306,3 +306,12 @@
 - [x] Remove blue Weekly Report button from home screen
 - [x] Keep home screen clean with black/white theme
 - [x] All 164 tests passing
+
+
+## Latest Fixes
+
+- [x] Removed Settings tab from bottom navigation completely
+- [x] Added daily reminder toggle to settings modal
+- [x] Added time picker for daily reminders
+- [x] Restored daily reminder functionality in settings
+- [x] All 164 tests passing
