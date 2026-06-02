@@ -39,7 +39,7 @@ export default function TabLayout() {
         name="transactions"
         options={{
           title: "Transactions",
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          tabBarIcon: () => <Text style={{ fontSize: 20 }}>📃</Text>,
         }}
       />
       <Tabs.Screen
