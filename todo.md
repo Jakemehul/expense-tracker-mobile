@@ -334,3 +334,15 @@
 - [x] Add tests for theme preference service
 - [x] Verify theme switching and persistence
 - [x] All 181 tests passing (2 skipped)
+
+
+## Receipt Photo Attachments (Complete)
+
+- [x] Update transaction model to support photo URIs
+- [x] Create photo picker service and utility functions
+- [x] Add photo picker to add/edit transaction screens
+- [x] Build receipt photo display component
+- [x] Add photo management (view, replace, delete) in transaction details
+- [x] Add photo indicator badge on transaction cards
+- [x] Test photo attachment functionality
+- [x] All 181 tests passing

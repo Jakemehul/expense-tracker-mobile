@@ -13,6 +13,8 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { ScreenContainer } from "@/components/screen-container";
 import { useTransactions } from "@/lib/transaction-context";
 import { DatePicker } from "@/components/date-picker";
+import { PhotoPickerButton } from "@/components/photo-picker-button";
+import { ReceiptPhotoDisplay } from "@/components/receipt-photo-display";
 import { useState, useEffect, useMemo } from "react";
 
 export default function EditTransactionScreen() {
@@ -30,6 +32,7 @@ export default function EditTransactionScreen() {
   const [date, setDate] = useState(transaction?.date ? new Date(transaction.date) : new Date());
   const [description, setDescription] = useState(transaction?.description || "");
   const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [photoUri, setPhotoUri] = useState<string | undefined>(transaction?.photoUri);
 
   const filteredCategories = useMemo(() => {
     return categories.filter((c) => c.type === type || c.type === "both");
@@ -72,6 +75,7 @@ export default function EditTransactionScreen() {
         category: selectedCategory,
         date,
         description,
+        photoUri,
       });
 
       Alert.alert("Success", "Transaction updated successfully", [
@@ -207,10 +211,28 @@ export default function EditTransactionScreen() {
           />
         </View>
 
+        {/* Receipt Photo Section */}
+        {!photoUri ? (
+          <PhotoPickerButton
+            onPhotoSelected={setPhotoUri}
+            label="Add Receipt Photo (Optional)"
+            icon="📸"
+          />
+        ) : (
+          <ReceiptPhotoDisplay
+            photoUri={photoUri}
+            editable
+            onRemove={() => setPhotoUri(undefined)}
+            onReplace={() => {
+              setPhotoUri(undefined);
+            }}
+          />
+        )}
+
         {/* Save Button */}
         <TouchableOpacity
           onPress={handleSave}
-          className="bg-primary py-4 rounded-lg items-center mb-3"
+          className="bg-primary py-4 rounded-lg items-center mb-3 mt-6"
           activeOpacity={0.8}
         >
           <Text className="text-white font-semibold text-lg">Save Changes</Text>

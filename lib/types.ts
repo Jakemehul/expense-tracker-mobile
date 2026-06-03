@@ -9,6 +9,7 @@ export interface Transaction {
   date: Date;
   description: string;
   createdAt: Date;
+  photoUri?: string; // Optional receipt photo URI
 }
 
 /**

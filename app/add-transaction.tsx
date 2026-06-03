@@ -12,6 +12,8 @@ import { ScreenContainer } from "@/components/screen-container";
 import { useTransactions } from "@/lib/transaction-context";
 import { DEFAULT_CATEGORIES } from "@/lib/types";
 import { DatePicker } from "@/components/date-picker";
+import { PhotoPickerButton } from "@/components/photo-picker-button";
+import { ReceiptPhotoDisplay } from "@/components/receipt-photo-display";
 import { useState } from "react";
 
 export default function AddTransactionScreen() {
@@ -24,6 +26,7 @@ export default function AddTransactionScreen() {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [date, setDate] = useState(new Date());
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
+  const [photoUri, setPhotoUri] = useState<string | undefined>(undefined);
 
   const filteredCategories = categories.filter((c) => c.type === type || c.type === "both");
 
@@ -40,6 +43,7 @@ export default function AddTransactionScreen() {
         category: selectedCategory,
         date,
         description,
+        photoUri,
       });
       router.back();
     } catch (error) {
@@ -176,10 +180,29 @@ export default function AddTransactionScreen() {
           />
         </View>
 
+        {/* Receipt Photo Section */}
+        {!photoUri ? (
+          <PhotoPickerButton
+            onPhotoSelected={setPhotoUri}
+            label="Add Receipt Photo (Optional)"
+            icon="📸"
+          />
+        ) : (
+          <ReceiptPhotoDisplay
+            photoUri={photoUri}
+            editable
+            onRemove={() => setPhotoUri(undefined)}
+            onReplace={() => {
+              setPhotoUri(undefined);
+              // User can tap again to add new photo
+            }}
+          />
+        )}
+
         {/* Save Button */}
         <TouchableOpacity
           onPress={handleAddTransaction}
-          className="bg-primary py-4 rounded-lg items-center mb-4"
+          className="bg-primary py-4 rounded-lg items-center mb-4 mt-6"
           activeOpacity={0.8}
         >
           <Text className="text-white font-semibold text-lg">Save Transaction</Text>

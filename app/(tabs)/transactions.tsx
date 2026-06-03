@@ -175,12 +175,17 @@ export default function TransactionsScreen() {
                       <View className="flex-row items-center flex-1 gap-3">
                         {categoryInfo && (
                           <View
-                            className="w-14 h-14 rounded-xl items-center justify-center shadow-sm"
+                            className="w-14 h-14 rounded-xl items-center justify-center shadow-sm relative"
                             style={{
                               backgroundColor: categoryInfo.color + "25",
                             }}
                           >
                             <Text className="text-3xl">{categoryInfo.icon}</Text>
+                            {item.photoUri && (
+                              <View className="absolute -top-1 -right-1 bg-primary rounded-full w-5 h-5 items-center justify-center">
+                                <Text className="text-xs">📷</Text>
+                              </View>
+                            )}
                           </View>
                         )}
                         <View className="flex-1">
