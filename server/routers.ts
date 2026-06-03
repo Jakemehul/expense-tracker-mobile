@@ -8,17 +8,18 @@ export const appRouter = router({
   system: systemRouter,
   version: router({
     latest: publicProcedure.query(() => ({
-      latestVersion: "1.0.1",
+      latestVersion: "1.0.2",
       downloadUrl: "https://expensetrk-9vdpakjp.manus.space",
-      releaseNotes: "Important updates and improvements",
+      releaseNotes: "Critical update with receipt photo attachments",
       changelog: [
-        "Fixed TypeScript type errors in chart components",
-        "Improved app performance and responsiveness",
-        "Enhanced budget tracking accuracy",
-        "Better dark mode support",
-        "Optimized AsyncStorage for faster data access",
+        "Added receipt photo attachment for transactions",
+        "Users can now capture or select photos from gallery",
+        "Photo indicator badges on transaction cards",
+        "Fullscreen photo viewer for receipts",
+        "Persistent photo storage with transactions",
+        "Improved photo picker with camera/library options",
       ],
-      forceUpdate: false,
+      forceUpdate: true,
     })),
   }),
   auth: router({
