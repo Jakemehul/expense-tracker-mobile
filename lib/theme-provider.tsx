@@ -3,6 +3,7 @@ import { Appearance, View, useColorScheme as useSystemColorScheme } from "react-
 import { colorScheme as nativewindColorScheme, vars } from "nativewind";
 
 import { SchemeColors, type ColorScheme } from "@/constants/theme";
+import { getThemePreference, getEffectiveTheme } from "@/lib/theme-preference-service";
 
 type ThemeContextValue = {
   colorScheme: ColorScheme;
@@ -14,6 +15,26 @@ const ThemeContext = createContext<ThemeContextValue | null>(null);
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const systemScheme = useSystemColorScheme() ?? "light";
   const [colorScheme, setColorSchemeState] = useState<ColorScheme>(systemScheme);
+  const [themePreference, setThemePreferenceState] = useState<"light" | "dark" | "system">(
+    "system"
+  );
+
+  // Load theme preference on mount
+  useEffect(() => {
+    const loadThemePreference = async () => {
+      const preference = await getThemePreference();
+      setThemePreferenceState(preference);
+      const effectiveTheme = getEffectiveTheme(preference, systemScheme);
+      setColorSchemeState(effectiveTheme);
+    };
+    loadThemePreference();
+  }, []);
+
+  // Update theme when preference changes
+  useEffect(() => {
+    const effectiveTheme = getEffectiveTheme(themePreference, systemScheme);
+    setColorSchemeState(effectiveTheme);
+  }, [themePreference, systemScheme]);
 
   const applyScheme = useCallback((scheme: ColorScheme) => {
     nativewindColorScheme.set(scheme);
@@ -51,7 +72,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         "color-warning": SchemeColors[colorScheme].warning,
         "color-error": SchemeColors[colorScheme].error,
       }),
-    [colorScheme],
+    [colorScheme]
   );
 
   const value = useMemo(
@@ -59,9 +80,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       colorScheme,
       setColorScheme,
     }),
-    [colorScheme, setColorScheme],
+    [colorScheme, setColorScheme]
   );
-  console.log(value, themeVariables)
 
   return (
     <ThemeContext.Provider value={value}>

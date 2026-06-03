@@ -21,6 +21,12 @@ import {
   parseTimeString,
   createTimeString,
 } from "@/lib/daily-reminder-service";
+import {
+  getThemePreference,
+  setThemePreference,
+  getThemeOptions,
+  type ThemeMode,
+} from "@/lib/theme-preference-service";
 
 interface SettingsModalProps {
   visible: boolean;
@@ -40,18 +46,22 @@ export function SettingsModalFull({ visible, onClose }: SettingsModalProps) {
   const [showTimeModal, setShowTimeModal] = useState(false);
   const [selectedHour, setSelectedHour] = useState(9);
   const [selectedMinute, setSelectedMinute] = useState(0);
+  const [themePreference, setThemePreferenceState] = useState<ThemeMode>("system");
 
-  // Load reminder settings on mount
+  // Load reminder and theme settings on mount
   useEffect(() => {
-    const loadReminders = async () => {
+    const loadSettings = async () => {
       const settings = await getReminderSettings();
       setReminderEnabled(settings.enabled);
       setReminderTime(settings.time);
       const { hours, minutes } = parseTimeString(settings.time);
       setSelectedHour(hours);
       setSelectedMinute(minutes);
+
+      const theme = await getThemePreference();
+      setThemePreferenceState(theme);
     };
-    loadReminders();
+    loadSettings();
   }, []);
 
   const handleToggleReminder = async () => {
@@ -71,6 +81,11 @@ export function SettingsModalFull({ visible, onClose }: SettingsModalProps) {
       await updateReminderSettings({ time: newTime });
     }
     setShowTimeModal(false);
+  };
+
+  const handleThemeChange = async (theme: ThemeMode) => {
+    setThemePreferenceState(theme);
+    await setThemePreference(theme);
   };
 
   const handleExportTransactionsCsv = async () => {
@@ -173,13 +188,65 @@ export function SettingsModalFull({ visible, onClose }: SettingsModalProps) {
                 >
                   <View className="flex-row justify-between items-center mb-3">
                     <Text className="text-foreground">App Version</Text>
-                    <Text className="text-muted">1.0.0</Text>
+                    <Text className="text-muted">1.0.1</Text>
                   </View>
                   <View className="flex-row justify-between items-center">
                     <Text className="text-foreground">Total Transactions</Text>
                     <Text className="font-semibold" style={{ color: colors.primary }}>
                       {transactions.length}
                     </Text>
+                  </View>
+                </View>
+              </View>
+
+              {/* Theme Section */}
+              <View className="mb-6">
+                <Text className="text-sm font-semibold text-muted mb-3 uppercase">
+                  Appearance
+                </Text>
+                <View
+                  className="rounded-2xl p-4 border"
+                  style={{ borderColor: colors.border, backgroundColor: colors.surface }}
+                >
+                  <Text className="text-foreground font-semibold mb-3">🎨 Theme</Text>
+                  <View className="gap-2">
+                    {getThemeOptions().map((option) => (
+                      <TouchableOpacity
+                        key={option.value}
+                        onPress={() => handleThemeChange(option.value)}
+                        className="flex-row items-center justify-between p-3 rounded-lg border"
+                        style={{
+                          backgroundColor:
+                            themePreference === option.value
+                              ? colors.primary
+                              : colors.background,
+                          borderColor:
+                            themePreference === option.value
+                              ? colors.primary
+                              : colors.border,
+                        }}
+                        activeOpacity={0.8}
+                      >
+                        <Text
+                          className="font-semibold"
+                          style={{
+                            color:
+                              themePreference === option.value
+                                ? colors.background
+                                : colors.foreground,
+                          }}
+                        >
+                          {option.icon} {option.label}
+                        </Text>
+                        {themePreference === option.value && (
+                          <Text
+                            style={{ color: colors.background }}
+                          >
+                            ✓
+                          </Text>
+                        )}
+                      </TouchableOpacity>
+                    ))}
                   </View>
                 </View>
               </View>
@@ -369,27 +436,27 @@ export function SettingsModalFull({ visible, onClose }: SettingsModalProps) {
                       onPress={() =>
                         setSelectedHour((h) => (h === 0 ? 23 : h - 1))
                       }
-                      className="w-10 h-10 rounded-lg items-center justify-center"
-                      style={{ backgroundColor: colors.surface }}
+                      className="w-10 h-10 rounded-full items-center justify-center"
+                      style={{ backgroundColor: colors.primary }}
                     >
-                      <Text className="text-lg font-bold text-foreground">−</Text>
+                      <Text className="text-white font-bold">−</Text>
                     </TouchableOpacity>
-                    <Text className="text-3xl font-bold text-foreground w-12 text-center">
-                      {selectedHour.toString().padStart(2, "0")}
+                    <Text className="text-2xl font-bold text-foreground w-12 text-center">
+                      {String(selectedHour).padStart(2, "0")}
                     </Text>
                     <TouchableOpacity
                       onPress={() =>
                         setSelectedHour((h) => (h === 23 ? 0 : h + 1))
                       }
-                      className="w-10 h-10 rounded-lg items-center justify-center"
-                      style={{ backgroundColor: colors.surface }}
+                      className="w-10 h-10 rounded-full items-center justify-center"
+                      style={{ backgroundColor: colors.primary }}
                     >
-                      <Text className="text-lg font-bold text-foreground">+</Text>
+                      <Text className="text-white font-bold">+</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
 
-                <Text className="text-3xl font-bold text-foreground">:</Text>
+                <Text className="text-2xl font-bold text-foreground">:</Text>
 
                 <View className="items-center">
                   <Text className="text-xs text-muted mb-2">Minute</Text>
@@ -398,22 +465,22 @@ export function SettingsModalFull({ visible, onClose }: SettingsModalProps) {
                       onPress={() =>
                         setSelectedMinute((m) => (m === 0 ? 59 : m - 1))
                       }
-                      className="w-10 h-10 rounded-lg items-center justify-center"
-                      style={{ backgroundColor: colors.surface }}
+                      className="w-10 h-10 rounded-full items-center justify-center"
+                      style={{ backgroundColor: colors.primary }}
                     >
-                      <Text className="text-lg font-bold text-foreground">−</Text>
+                      <Text className="text-white font-bold">−</Text>
                     </TouchableOpacity>
-                    <Text className="text-3xl font-bold text-foreground w-12 text-center">
-                      {selectedMinute.toString().padStart(2, "0")}
+                    <Text className="text-2xl font-bold text-foreground w-12 text-center">
+                      {String(selectedMinute).padStart(2, "0")}
                     </Text>
                     <TouchableOpacity
                       onPress={() =>
                         setSelectedMinute((m) => (m === 59 ? 0 : m + 1))
                       }
-                      className="w-10 h-10 rounded-lg items-center justify-center"
-                      style={{ backgroundColor: colors.surface }}
+                      className="w-10 h-10 rounded-full items-center justify-center"
+                      style={{ backgroundColor: colors.primary }}
                     >
-                      <Text className="text-lg font-bold text-foreground">+</Text>
+                      <Text className="text-white font-bold">+</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -421,127 +488,78 @@ export function SettingsModalFull({ visible, onClose }: SettingsModalProps) {
 
               <TouchableOpacity
                 onPress={handleSaveTime}
-                className="rounded-lg p-4 active:opacity-80"
+                className="rounded-full py-3 items-center"
                 style={{ backgroundColor: colors.primary }}
-                activeOpacity={0.8}
               >
-                <Text className="text-white font-semibold text-center text-lg">
-                  Save Time
-                </Text>
+                <Text className="text-white font-semibold">Save Time</Text>
               </TouchableOpacity>
             </View>
           </View>
         </View>
       </Modal>
 
-      {/* Export Options Modal */}
-      <Modal visible={showExportModal} transparent animationType="slide">
-        <View className="flex-1 bg-black/50 justify-end">
+      {/* Export Modal */}
+      <Modal visible={showExportModal} transparent animationType="fade">
+        <View className="flex-1 bg-black/50 justify-center items-center p-4">
           <View
-            className="rounded-t-3xl p-6 max-h-[90%]"
-            style={{ backgroundColor: colors.background }}
+            className="rounded-3xl p-6 w-full max-w-sm gap-3"
+            style={{ backgroundColor: colors.surface }}
           >
-            <View className="mb-6 flex-row items-center justify-between">
-              <Text className="text-2xl font-bold text-foreground">Export Options</Text>
-              <Pressable onPress={() => setShowExportModal(false)}>
-                <Text className="text-2xl text-muted">✕</Text>
-              </Pressable>
-            </View>
+            <Text className="text-xl font-bold text-foreground mb-2">Export Data</Text>
 
-            <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
-              {/* CSV Exports */}
-              <Text className="text-sm font-semibold text-muted mb-3 uppercase">CSV Exports</Text>
+            <TouchableOpacity
+              onPress={handleExportTransactionsCsv}
+              className="rounded-lg p-4 active:opacity-80"
+              style={{ backgroundColor: colors.primary }}
+              activeOpacity={0.8}
+            >
+              <Text className="text-white font-semibold">📄 Transactions (CSV)</Text>
+            </TouchableOpacity>
 
-              <TouchableOpacity
-                onPress={handleExportTransactionsCsv}
-                className="rounded-lg p-4 mb-3 active:opacity-80 border"
-                style={{ backgroundColor: colors.surface, borderColor: colors.border }}
-                activeOpacity={0.8}
-              >
-                <View className="flex-row items-center justify-between">
-                  <View className="flex-1">
-                    <Text className="text-foreground font-semibold">📋 All Transactions</Text>
-                    <Text className="text-xs text-muted mt-1">
-                      Export {transactions.length} transactions
-                    </Text>
-                  </View>
-                  <Text className="text-muted">→</Text>
-                </View>
-              </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleExportCategorySpendingCsv}
+              className="rounded-lg p-4 active:opacity-80"
+              style={{ backgroundColor: colors.primary }}
+              activeOpacity={0.8}
+            >
+              <Text className="text-white font-semibold">📊 Category Spending (CSV)</Text>
+            </TouchableOpacity>
 
-              <TouchableOpacity
-                onPress={handleExportCategorySpendingCsv}
-                className="rounded-lg p-4 mb-3 active:opacity-80 border"
-                style={{ backgroundColor: colors.surface, borderColor: colors.border }}
-                activeOpacity={0.8}
-              >
-                <View className="flex-row items-center justify-between">
-                  <View className="flex-1">
-                    <Text className="text-foreground font-semibold">📊 Category Spending</Text>
-                    <Text className="text-xs text-muted mt-1">Breakdown by category</Text>
-                  </View>
-                  <Text className="text-muted">→</Text>
-                </View>
-              </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleExportSummaryReportCsv}
+              className="rounded-lg p-4 active:opacity-80"
+              style={{ backgroundColor: colors.primary }}
+              activeOpacity={0.8}
+            >
+              <Text className="text-white font-semibold">📈 Summary Report (CSV)</Text>
+            </TouchableOpacity>
 
-              <TouchableOpacity
-                onPress={handleExportSummaryReportCsv}
-                className="rounded-lg p-4 mb-6 active:opacity-80 border"
-                style={{ backgroundColor: colors.surface, borderColor: colors.border }}
-                activeOpacity={0.8}
-              >
-                <View className="flex-row items-center justify-between">
-                  <View className="flex-1">
-                    <Text className="text-foreground font-semibold">📈 Summary Report</Text>
-                    <Text className="text-xs text-muted mt-1">Income, expense and balance</Text>
-                  </View>
-                  <Text className="text-muted">→</Text>
-                </View>
-              </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleExportTransactionsPdf}
+              className="rounded-lg p-4 active:opacity-80"
+              style={{ backgroundColor: colors.primary }}
+              activeOpacity={0.8}
+            >
+              <Text className="text-white font-semibold">📋 Transactions (PDF)</Text>
+            </TouchableOpacity>
 
-              {/* PDF Exports */}
-              <Text className="text-sm font-semibold text-muted mb-3 uppercase">PDF Exports</Text>
+            <TouchableOpacity
+              onPress={handleExportCategorySpendingPdf}
+              className="rounded-lg p-4 active:opacity-80"
+              style={{ backgroundColor: colors.primary }}
+              activeOpacity={0.8}
+            >
+              <Text className="text-white font-semibold">📉 Category Spending (PDF)</Text>
+            </TouchableOpacity>
 
-              <TouchableOpacity
-                onPress={handleExportTransactionsPdf}
-                className="rounded-lg p-4 mb-3 active:opacity-80 border"
-                style={{ backgroundColor: colors.surface, borderColor: colors.border }}
-                activeOpacity={0.8}
-              >
-                <View className="flex-row items-center justify-between">
-                  <View className="flex-1">
-                    <Text className="text-foreground font-semibold">📄 All Transactions</Text>
-                    <Text className="text-xs text-muted mt-1">Formatted PDF report</Text>
-                  </View>
-                  <Text className="text-muted">→</Text>
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={handleExportCategorySpendingPdf}
-                className="rounded-lg p-4 mb-3 active:opacity-80 border"
-                style={{ backgroundColor: colors.surface, borderColor: colors.border }}
-                activeOpacity={0.8}
-              >
-                <View className="flex-row items-center justify-between">
-                  <View className="flex-1">
-                    <Text className="text-foreground font-semibold">📑 Category Spending</Text>
-                    <Text className="text-xs text-muted mt-1">Visual breakdown report</Text>
-                  </View>
-                  <Text className="text-muted">→</Text>
-                </View>
-              </TouchableOpacity>
-
-              {/* Close Button */}
-              <TouchableOpacity
-                onPress={() => setShowExportModal(false)}
-                className="rounded-lg p-4 active:opacity-80 border"
-                style={{ backgroundColor: colors.surface, borderColor: colors.border }}
-                activeOpacity={0.8}
-              >
-                <Text className="text-foreground font-semibold text-center">Close</Text>
-              </TouchableOpacity>
-            </ScrollView>
+            <TouchableOpacity
+              onPress={() => setShowExportModal(false)}
+              className="rounded-lg p-4 border"
+              style={{ borderColor: colors.border }}
+              activeOpacity={0.8}
+            >
+              <Text className="text-foreground font-semibold text-center">Cancel</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>

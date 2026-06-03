@@ -324,3 +324,13 @@
 - [x] Added Budgets tab to bottom navigation
 - [x] Added Quick Add FAB (➕) with bouncy animation on home screen
 - [x] All 164 tests passing
+
+
+## Dark/Light Mode Theme Toggle (Latest)
+
+- [x] Create theme preference service with persistent storage
+- [x] Add theme toggle UI to settings modal with Light/Dark/System options
+- [x] Integrate theme changes with existing theme provider
+- [x] Add tests for theme preference service
+- [x] Verify theme switching and persistence
+- [x] All 181 tests passing (2 skipped)
