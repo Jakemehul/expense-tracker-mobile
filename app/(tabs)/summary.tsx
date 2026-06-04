@@ -39,7 +39,7 @@ export default function SummaryScreen() {
   }).format(currentDate);
 
   const getCategoryInfo = (categoryId: string) => {
-    return categories.find((c) => c.name === categoryId);
+    return categories.find((c) => c.id === categoryId);
   };
 
   const categoryList = Object.entries(stats.byCategory)

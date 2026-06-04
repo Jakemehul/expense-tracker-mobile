@@ -34,8 +34,8 @@ export default function TransactionsScreen() {
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   }, [transactions, searchText, filterType]);
 
-  const getCategoryInfo = (categoryName: string) => {
-    return categories.find((c) => c.name === categoryName);
+  const getCategoryInfo = (categoryId: string) => {
+    return categories.find((c) => c.id === categoryId);
   };
 
   const formatCurrency = (amount: number) => {
@@ -192,7 +192,7 @@ export default function TransactionsScreen() {
                         )}
                         <View className="flex-1">
                           <Text className="text-sm font-bold text-foreground">
-                            {formatCategoryName(item.category)}
+                            {categoryInfo ? formatCategoryName(categoryInfo.name) : "Unknown"}
                           </Text>
                           <Text
                             className="text-xs text-muted mt-0.5"

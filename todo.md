@@ -453,3 +453,13 @@
 - [x] Add Parents Money category to income options
 - [x] Extend date picker to allow selecting dates 6 months into the future
 - [x] Update date picker help text to show past and future range
+
+
+## Android Compatibility Fix (Latest Session)
+
+- [x] Lowered minSdkVersion from 24 to 21 for broader device support
+- [x] Reordered buildArchs to prioritize arm64-v8a (newer devices) with armeabi-v7a fallback
+- [x] Added targetSdkVersion and compileSdkVersion for better compatibility
+- [x] Bumped versionCode to 4 for new APK build
+- [x] Fixed category lookup bug causing crashes
+- [x] Fixed formatCategoryName to use category name instead of ID
