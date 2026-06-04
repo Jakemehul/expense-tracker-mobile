@@ -5,12 +5,14 @@ interface DatePickerProps {
   selectedDate: Date;
   onDateChange: (date: Date) => void;
   maxDaysInPast?: number;
+  maxDaysInFuture?: number;
 }
 
 export function DatePicker({
   selectedDate,
   onDateChange,
   maxDaysInPast = 365,
+  maxDaysInFuture = 180,
 }: DatePickerProps) {
   const [showPicker, setShowPicker] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(selectedDate.getMonth());
@@ -19,6 +21,8 @@ export function DatePicker({
   const today = new Date();
   const minDate = new Date();
   minDate.setDate(minDate.getDate() - maxDaysInPast);
+  const maxDate = new Date();
+  maxDate.setDate(maxDate.getDate() + maxDaysInFuture);
 
   const daysInMonth = useMemo(() => {
     const firstDay = new Date(selectedYear, selectedMonth, 1);
@@ -39,16 +43,16 @@ export function DatePicker({
 
   const years = useMemo(() => {
     const yearArray = [];
-    for (let i = minDate.getFullYear(); i <= today.getFullYear(); i++) {
+    for (let i = minDate.getFullYear(); i <= maxDate.getFullYear(); i++) {
       yearArray.push(i);
     }
     return yearArray.reverse();
-  }, [minDate, today]);
+  }, [minDate, maxDate]);
 
   const handleDateSelect = (day: number) => {
     const newDate = new Date(selectedYear, selectedMonth, day);
 
-    if (newDate >= minDate && newDate <= today) {
+    if (newDate >= minDate && newDate <= maxDate) {
       onDateChange(newDate);
       setShowPicker(false);
     }
@@ -57,7 +61,7 @@ export function DatePicker({
   const isDateDisabled = (day: number) => {
     if (!day) return true;
     const checkDate = new Date(selectedYear, selectedMonth, day);
-    return checkDate < minDate || checkDate > today;
+    return checkDate < minDate || checkDate > maxDate;
   };
 
   const isDateSelected = (day: number) => {
@@ -73,10 +77,11 @@ export function DatePicker({
   const isDateToday = (day: number) => {
     if (!day) return false;
     const checkDate = new Date(selectedYear, selectedMonth, day);
+    const currentToday = new Date();
     return (
-      checkDate.getDate() === today.getDate() &&
-      checkDate.getMonth() === today.getMonth() &&
-      checkDate.getFullYear() === today.getFullYear()
+      checkDate.getDate() === currentToday.getDate() &&
+      checkDate.getMonth() === currentToday.getMonth() &&
+      checkDate.getFullYear() === currentToday.getFullYear()
     );
   };
 
@@ -264,7 +269,7 @@ export function DatePicker({
           </Pressable>
 
           <Text className="text-xs text-muted text-center mt-3">
-            You can select dates up to {maxDaysInPast} days in the past
+            You can select dates up to {maxDaysInPast} days in the past or {maxDaysInFuture} days in the future
           </Text>
         </View>
       )}

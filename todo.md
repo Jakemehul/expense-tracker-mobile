@@ -346,3 +346,110 @@
 - [x] Add photo indicator badge on transaction cards
 - [x] Test photo attachment functionality
 - [x] All 181 tests passing
+
+## Future Features (To Implement When Credits Available)
+
+### 1. Duplicate Transaction
+- [ ] Add "Duplicate" button on transaction cards
+- [ ] Quick copy of existing transaction details (amount, category, description)
+- [ ] Pre-fill form with duplicated data
+- [ ] Allow user to modify before saving
+- [ ] Test duplicate functionality
+
+### 2. Expense Splitting
+- [ ] Create expense split data model
+- [ ] Add split option when creating transactions
+- [ ] Allow selecting multiple people to split with
+- [ ] Calculate individual shares and amounts owed
+- [ ] Build split settlement tracking screen
+- [ ] Show who owes whom and settlement history
+- [ ] Add settlement confirmation and history
+- [ ] Test expense splitting logic
+
+### 3. Recurring Transactions
+- [ ] Create recurring transaction data model
+- [ ] Add frequency options (daily, weekly, monthly, yearly)
+- [ ] Build recurring transaction setup UI
+- [ ] Auto-generate transactions on schedule
+- [ ] Allow editing/pausing recurring entries
+- [ ] Show upcoming recurring transactions
+- [ ] Test recurring transaction generation
+
+### 4. Advanced Search & Filters
+- [ ] Add search by description/notes
+- [ ] Create advanced filter UI (date range, category, amount range)
+- [ ] Build complex query logic
+- [ ] Show filter results with sorting options
+- [ ] Save favorite filters for quick access
+- [ ] Test search and filter functionality
+
+### 5. Spending Comparison (Month-over-Month)
+- [ ] Create month comparison service
+- [ ] Build comparison chart (current vs previous months)
+- [ ] Show category-wise comparison
+- [ ] Calculate percentage changes
+- [ ] Display spending trends across months
+- [ ] Test month comparison logic
+
+### 6. Savings Goals
+- [ ] Create savings goal data model
+- [ ] Build goal creation UI with target amount and deadline
+- [ ] Calculate progress toward goals
+- [ ] Show milestone achievements
+- [ ] Add goal notifications when milestones reached
+- [ ] Build goal tracking screen
+- [ ] Test savings goal functionality
+
+### 7. Spending Patterns (AI Insights)
+- [ ] Analyze spending by day of week (already have basic version)
+- [ ] Detect spending anomalies (unusual high/low days)
+- [ ] Identify recurring patterns (e.g., "You always spend more on Fridays")
+- [ ] Generate AI-powered insights and recommendations
+- [ ] Show actionable tips to reduce spending
+- [ ] Build insights display component
+- [ ] Test pattern detection logic
+
+### 8. Budget Recommendations
+- [ ] Analyze historical spending data
+- [ ] Calculate optimal budget limits per category
+- [ ] Suggest budget adjustments based on patterns
+- [ ] Show recommendation confidence levels
+- [ ] Allow one-click acceptance of recommendations
+- [ ] Test budget recommendation algorithm
+
+### 11. Enhanced Notification Reminders
+- [ ] Add multiple reminder times per day
+- [ ] Create custom reminder messages
+- [ ] Add smart reminders (e.g., "Remind me on payday")
+- [ ] Build notification history/log
+- [ ] Add reminder templates for common expenses
+- [ ] Test enhanced reminder functionality
+
+### 14. Receipt OCR (Optical Character Recognition)
+- [ ] Integrate OCR library for receipt scanning
+- [ ] Auto-extract amount from receipt photos
+- [ ] Auto-extract date from receipt photos
+- [ ] Auto-extract merchant/description
+- [ ] Validate extracted data before saving
+- [ ] Allow manual correction if needed
+- [ ] Test OCR accuracy and edge cases
+
+### 16. Offline Sync (Cloud Synchronization)
+- [ ] Create cloud sync service
+- [ ] Implement conflict resolution for offline changes
+- [ ] Build sync status indicator
+- [ ] Add manual sync trigger button
+- [ ] Handle network connectivity changes
+- [ ] Queue transactions when offline
+- [ ] Sync when connection restored
+- [ ] Test offline and online scenarios
+
+
+## UI Improvements (Latest Session)
+
+- [x] Compact transaction card layout - show only category, amount, and notes
+- [x] Add 3-dot menu button to transaction cards for edit/delete options
+- [x] Reduce card size and visual clutter for better readability
+- [x] Add Parents Money category to income options
+- [x] Extend date picker to allow selecting dates 6 months into the future
+- [x] Update date picker help text to show past and future range

@@ -6,6 +6,7 @@ import {
   Pressable,
   FlatList,
   Alert,
+  Modal,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { ScreenContainer } from "@/components/screen-container";
@@ -19,6 +20,7 @@ export default function TransactionsScreen() {
   const { transactions, deleteTransaction, categories } = useTransactions();
   const [searchText, setSearchText] = useState("");
   const [filterType, setFilterType] = useState<"all" | "income" | "expense">("all");
+  const [menuVisible, setMenuVisible] = useState<string | null>(null);
 
   const filteredTransactions = useMemo(() => {
     return transactions
@@ -170,36 +172,41 @@ export default function TransactionsScreen() {
                       borderLeftColor: isIncome ? "#22C55E" : "#EF4444",
                     }}
                   >
-                    {/* Top Row: Category Badge and Amount */}
-                    <View className="flex-row items-center justify-between mb-4">
+                    {/* Compact Header: Category, Amount, and Menu */}
+                    <View className="flex-row items-center justify-between">
                       <View className="flex-row items-center flex-1 gap-3">
                         {categoryInfo && (
                           <View
-                            className="w-14 h-14 rounded-xl items-center justify-center shadow-sm relative"
+                            className="w-12 h-12 rounded-lg items-center justify-center shadow-sm relative"
                             style={{
                               backgroundColor: categoryInfo.color + "25",
                             }}
                           >
-                            <Text className="text-3xl">{categoryInfo.icon}</Text>
+                            <Text className="text-2xl">{categoryInfo.icon}</Text>
                             {item.photoUri && (
-                              <View className="absolute -top-1 -right-1 bg-primary rounded-full w-5 h-5 items-center justify-center">
+                              <View className="absolute -top-1 -right-1 bg-primary rounded-full w-4 h-4 items-center justify-center">
                                 <Text className="text-xs">📷</Text>
                               </View>
                             )}
                           </View>
                         )}
                         <View className="flex-1">
-                          <Text className="text-base font-bold text-foreground">
+                          <Text className="text-sm font-bold text-foreground">
                             {formatCategoryName(item.category)}
                           </Text>
-                          <Text className="text-xs text-muted mt-1">
-                            {item.description || formatDate(item.date)}
+                          <Text
+                            className="text-xs text-muted mt-0.5"
+                            numberOfLines={1}
+                          >
+                            {item.description || "No notes"}
                           </Text>
                         </View>
                       </View>
-                      <View className="items-end">
+
+                      {/* Amount and Menu */}
+                      <View className="items-end gap-2 ml-2">
                         <Text
-                          className="text-xl font-bold"
+                          className="text-lg font-bold"
                           style={{
                             color: isIncome ? "#22C55E" : "#EF4444",
                           }}
@@ -207,35 +214,47 @@ export default function TransactionsScreen() {
                           {isIncome ? "+" : "-"}
                           {formatCurrency(item.amount)}
                         </Text>
-                        <Text className="text-xs text-muted mt-1">
-                          {formatDate(item.date)}
-                        </Text>
+                        <Pressable
+                          onPress={() => setMenuVisible(menuVisible === item.id ? null : item.id)}
+                          style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}
+                        >
+                          <Text className="text-lg">⋯</Text>
+                        </Pressable>
                       </View>
                     </View>
 
-                    {/* Action Buttons - Compact Modern Style */}
-                    <View className="flex-row gap-2 pt-3 border-t border-border">
-                      <Pressable
-                        onPress={() => handleEdit(item.id)}
-                        style={({ pressed }) => [{ opacity: pressed ? 0.8 : 1, transform: [{ scale: pressed ? 0.98 : 1 }] }]}
-                        className="flex-1"
-                      >
-                        <View className="bg-primary/10 border border-primary rounded-lg py-3 items-center flex-row justify-center gap-2">
-                          <Text className="text-lg">✏️</Text>
-                          <Text className="text-primary font-semibold text-sm">Edit</Text>
-                        </View>
-                      </Pressable>
-                      <Pressable
-                        onPress={() => handleDelete(item.id)}
-                        style={({ pressed }) => [{ opacity: pressed ? 0.8 : 1, transform: [{ scale: pressed ? 0.98 : 1 }] }]}
-                        className="flex-1"
-                      >
-                        <View className="bg-error/10 border border-error rounded-lg py-3 items-center flex-row justify-center gap-2">
-                          <Text className="text-lg">🗑️</Text>
-                          <Text className="text-error font-semibold text-sm">Delete</Text>
-                        </View>
-                      </Pressable>
-                    </View>
+                    {/* Date below notes */}
+                    <Text className="text-xs text-muted mt-2">{formatDate(item.date)}</Text>
+
+                    {/* Menu Popup */}
+                    {menuVisible === item.id && (
+                      <View className="mt-3 pt-3 border-t border-border flex-row gap-2">
+                        <Pressable
+                          onPress={() => {
+                            handleEdit(item.id);
+                            setMenuVisible(null);
+                          }}
+                          style={({ pressed }) => [{ opacity: pressed ? 0.8 : 1 }]}
+                          className="flex-1"
+                        >
+                          <View className="bg-primary/10 border border-primary rounded-lg py-2 items-center">
+                            <Text className="text-primary font-semibold text-xs">✏️ Edit</Text>
+                          </View>
+                        </Pressable>
+                        <Pressable
+                          onPress={() => {
+                            handleDelete(item.id);
+                            setMenuVisible(null);
+                          }}
+                          style={({ pressed }) => [{ opacity: pressed ? 0.8 : 1 }]}
+                          className="flex-1"
+                        >
+                          <View className="bg-error/10 border border-error rounded-lg py-2 items-center">
+                            <Text className="text-error font-semibold text-xs">🗑️ Delete</Text>
+                          </View>
+                        </Pressable>
+                      </View>
+                    )}
                   </View>
                 </View>
               );

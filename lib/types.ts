@@ -86,5 +86,6 @@ export const DEFAULT_CATEGORIES: Category[] = [
   // Income categories
   { id: "salary", name: "Salary", icon: "💰", color: "#22C55E", type: "income" },
   { id: "freelance", name: "Freelance", icon: "💻", color: "#60A5FA", type: "income" },
+  { id: "parents-money", name: "Parents Money", icon: "👨‍👩‍👧", color: "#EC4899", type: "income" },
   { id: "other-income", name: "Other Income", icon: "⭐", color: "#FBBF24", type: "income" },
 ];
