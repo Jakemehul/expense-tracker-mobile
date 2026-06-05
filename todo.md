@@ -475,3 +475,15 @@
 - [x] Auto-fill form with UPI payment data
 - [x] User manually selects category after UPI payment
 - [x] All 181 tests passing
+
+
+## PDF Export & Today's Spend Widget (Latest Session)
+
+- [x] Create PDF export service with jsPDF
+- [x] Add summary table (Income, Expense, Net) to PDF
+- [x] Add detailed transactions table to PDF
+- [x] Add 📄 export button to Transactions screen
+- [x] Create Today's Spend widget component
+- [x] Integrate widget into home screen
+- [x] Widget shows only today's expenses
+- [x] All 181 tests passing

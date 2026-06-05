@@ -25,6 +25,7 @@ import { Animated } from "react-native";
 import { SettingsModalFull } from "@/components/settings-modal-full";
 import { CategoryAlertBanner } from "@/components/category-alert-banner";
 import { getCategoryAlertsToShow, recordCategoryAlert } from "@/lib/category-alert-service";
+import { TodaysSpendWidget } from "@/components/todays-spend-widget";
 
 function BudgetWarnings() {
   const { getBudgetStatus } = useBudgets();
@@ -261,6 +262,11 @@ export default function HomeScreen() {
           {/* Budget Warnings */}
           <View className="mb-6">
             <BudgetWarnings />
+          </View>
+
+          {/* Today's Spend Widget */}
+          <View className="mb-6">
+            <TodaysSpendWidget transactions={transactions} />
           </View>
 
           {/* Recent Transactions */}

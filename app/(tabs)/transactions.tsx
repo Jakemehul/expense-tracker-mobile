@@ -13,6 +13,7 @@ import { ScreenContainer } from "@/components/screen-container";
 import { useTransactions } from "@/lib/transaction-context";
 import { CategoryBadge } from "@/components/category-badge";
 import { formatCategoryName } from "@/lib/types";
+import { exportTransactionsToPDF } from "@/lib/pdf-export-service";
 import { useState, useMemo } from "react";
 
 export default function TransactionsScreen() {
@@ -86,11 +87,32 @@ export default function TransactionsScreen() {
     <ScreenContainer className="p-4">
       <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}>
         {/* Header */}
-        <View className="mb-6">
-          <Text className="text-3xl font-bold text-foreground">Transactions</Text>
-          <Text className="text-sm text-muted mt-1">
-            {filteredTransactions.length} transaction{filteredTransactions.length !== 1 ? "s" : ""}
-          </Text>
+        <View className="mb-6 flex-row items-center justify-between">
+          <View className="flex-1">
+            <Text className="text-3xl font-bold text-foreground">Transactions</Text>
+            <Text className="text-sm text-muted mt-1">
+              {filteredTransactions.length} transaction{filteredTransactions.length !== 1 ? "s" : ""}
+            </Text>
+          </View>
+          <Pressable
+            onPress={async () => {
+              try {
+                const transactionsForExport = transactions.map((t) => ({
+                  ...t,
+                  categoryName: categories.find((c) => c.id === t.category)?.name || t.category,
+                }));
+                await exportTransactionsToPDF(transactionsForExport);
+                Alert.alert("Success", "PDF exported successfully");
+              } catch (error) {
+                Alert.alert("Error", "Failed to export PDF");
+              }
+            }}
+            style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
+          >
+            <View className="bg-primary/10 border border-primary rounded-lg px-3 py-2">
+              <Text className="text-lg">📄</Text>
+            </View>
+          </Pressable>
         </View>
 
         {/* Search Bar */}
