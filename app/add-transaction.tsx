@@ -14,6 +14,7 @@ import { DEFAULT_CATEGORIES } from "@/lib/types";
 import { DatePicker } from "@/components/date-picker";
 import { PhotoPickerButton } from "@/components/photo-picker-button";
 import { ReceiptPhotoDisplay } from "@/components/receipt-photo-display";
+import { UPIPaymentModal, type UPIPaymentData } from "@/components/upi-payment-modal";
 import { useState } from "react";
 
 export default function AddTransactionScreen() {
@@ -27,6 +28,7 @@ export default function AddTransactionScreen() {
   const [date, setDate] = useState(new Date());
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
   const [photoUri, setPhotoUri] = useState<string | undefined>(undefined);
+  const [showUPIModal, setShowUPIModal] = useState(false);
 
   const filteredCategories = categories.filter((c) => c.type === type || c.type === "both");
 
@@ -62,15 +64,34 @@ export default function AddTransactionScreen() {
 
   const selectedCategoryObj = categories.find((c) => c.id === selectedCategory);
 
+  const handleUPIPaymentInitiated = (upiData: UPIPaymentData) => {
+    // Pre-fill the form with UPI payment data
+    setType(upiData.type);
+    setAmount(upiData.amount);
+    setDescription(upiData.notes || `Payment to ${upiData.upiId}`);
+    setShowUPIModal(false);
+    // User will now select category manually
+  };
+
   return (
     <ScreenContainer className="p-4">
       <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}>
         {/* Header */}
         <View className="mb-6 flex-row items-center justify-between">
           <Text className="text-2xl font-bold text-foreground">Add Transaction</Text>
-          <Pressable onPress={() => router.back()}>
-            <Text className="text-lg text-muted">✕</Text>
-          </Pressable>
+          <View className="flex-row gap-2">
+            <Pressable
+              onPress={() => setShowUPIModal(true)}
+              style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
+            >
+              <View className="bg-primary/10 border border-primary rounded-lg px-3 py-2">
+                <Text className="text-lg">💳</Text>
+              </View>
+            </Pressable>
+            <Pressable onPress={() => router.back()}>
+              <Text className="text-lg text-muted">✕</Text>
+            </Pressable>
+          </View>
         </View>
 
         {/* Transaction Type Toggle */}
@@ -217,6 +238,13 @@ export default function AddTransactionScreen() {
           <Text className="text-foreground font-semibold">Cancel</Text>
         </TouchableOpacity>
       </ScrollView>
+
+      {/* UPI Payment Modal */}
+      <UPIPaymentModal
+        visible={showUPIModal}
+        onClose={() => setShowUPIModal(false)}
+        onPaymentInitiated={handleUPIPaymentInitiated}
+      />
 
       {/* Category Picker Modal */}
       <Modal visible={showCategoryPicker} transparent animationType="slide">

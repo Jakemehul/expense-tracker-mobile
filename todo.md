@@ -463,3 +463,15 @@
 - [x] Bumped versionCode to 4 for new APK build
 - [x] Fixed category lookup bug causing crashes
 - [x] Fixed formatCategoryName to use category name instead of ID
+
+
+## UPI Payment Integration (Latest Session)
+
+- [x] Create UPI payment modal component with bottom sheet
+- [x] Add Income/Expense selection in UPI modal
+- [x] Implement UPI deep linking to Google Pay and PhonePe
+- [x] Capture amount, UPI ID, and notes from user
+- [x] Add 💳 button to Add Transaction screen header
+- [x] Auto-fill form with UPI payment data
+- [x] User manually selects category after UPI payment
+- [x] All 181 tests passing

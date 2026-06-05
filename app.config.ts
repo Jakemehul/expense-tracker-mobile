@@ -120,6 +120,7 @@ const config: ExpoConfig = {
           minSdkVersion: 21,
           targetSdkVersion: 34,
           compileSdkVersion: 34,
+          usesCleartextTraffic: false,
         },
       },
     ],
