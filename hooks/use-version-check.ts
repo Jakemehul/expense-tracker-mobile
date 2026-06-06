@@ -13,7 +13,7 @@ export interface UpdateCheckState {
   shouldShow: boolean; // Whether to show based on dismissal history
 }
 
-const CURRENT_APP_VERSION = "1.0.0";
+const CURRENT_APP_VERSION = "1.0.21";
 
 /**
  * Hook to check for app updates on startup
