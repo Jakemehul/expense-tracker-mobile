@@ -64,8 +64,8 @@ export function VersionCheckProvider({ children }: { children: React.ReactNode }
     // Only allow dismissal if not a force update
     if (!versionState.versionInfo?.forceUpdate) {
       versionState.handleDismiss();
-      setShowUpdateModal(false);
     }
+    setShowUpdateModal(false);
   };
 
   return (
