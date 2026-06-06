@@ -423,14 +423,14 @@ export class ExportService {
   ): Promise<void> {
     try {
       const html = this.generateCategorySpendingHtml(transactions, categories);
-      const fileName = `expense-tracker-category-spending-${new Date().toISOString().split("T")[0]}.pdf`;
+      const fileName = `expense-tracker-category-spending-${new Date().toISOString().split("T")[0]}.html`;
       const filePath = `${FileSystem.documentDirectory}${fileName}`;
 
       await FileSystem.writeAsStringAsync(filePath, html);
 
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(filePath, {
-          mimeType: "application/pdf",
+          mimeType: "text/html",
           dialogTitle: "Export Category Spending Report",
         });
       } else {
