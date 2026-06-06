@@ -76,7 +76,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         for (const day of reminder.days) {
           const trigger: any = {
             type: Notifications.SchedulableTriggerInputTypes.CALENDAR,
-            weekday: day === 0 ? 7 : day, // Convert 0-6 to 1-7 (1 = Sunday in Expo)
+            weekday: day + 1, // Convert 0-6 to 1-7 (1 = Sunday in Expo)
             hour: reminder.hour,
             minute: reminder.minute,
             repeats: true,
