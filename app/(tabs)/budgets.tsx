@@ -42,7 +42,7 @@ export default function BudgetsScreen() {
   const topCategories = useMemo(() => {
     const categoryTotals: { [key: string]: number } = {};
     transactions
-      .filter((t) => t.type === "expense" && t.date.getMonth() === now.getMonth())
+      .filter((t) => t.type === "expense" && t.date.getMonth() === now.getMonth()) && t.date.getFullYear() === now.getFullYear()
       .forEach((t) => {
         categoryTotals[t.category] = (categoryTotals[t.category] || 0) + t.amount;
       });
