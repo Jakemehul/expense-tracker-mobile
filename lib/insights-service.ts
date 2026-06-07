@@ -193,7 +193,7 @@ export function getWeeklyCategorySummary(
       transactionCount: current.count,
       previousWeekTotal: previous.total,
       percentageChange,
-      icon: categoryIcons[cat.id] = cat.icon,
+      icon: categoryIcons[category] || '💰',
       color: categoryColors[category] || '#0a7ea4',
     });
   });
