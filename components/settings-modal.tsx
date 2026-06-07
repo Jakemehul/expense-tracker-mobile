@@ -237,7 +237,7 @@ export function SettingsModal({ visible, onClose }: SettingsModalProps) {
                   className="text-sm"
                   style={{ color: colors.muted }}
                 >
-                  1.0.0
+                  1.0.21
                 </Text>
               </View>
 
