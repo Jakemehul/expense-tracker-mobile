@@ -27,7 +27,7 @@ export class ExportService {
           .map((cell) => {
             // Escape quotes and wrap in quotes if contains comma
             const escaped = String(cell).replace(/"/g, '""');
-            return escaped.includes(",") ? `"${escaped}"` : escaped;
+            return /[,\n\r]/.test(escaped) ? `"${escaped}"` : escaped;
           })
           .join(",")
       ),
@@ -76,7 +76,7 @@ export class ExportService {
         row
           .map((cell) => {
             const escaped = String(cell).replace(/"/g, '""');
-            return escaped.includes(",") ? `"${escaped}"` : escaped;
+            return /[,\n\r]/.test(escaped) ? `"${escaped}"` : escaped;
           })
           .join(",")
       ),
@@ -114,7 +114,7 @@ export class ExportService {
         row
           .map((cell) => {
             const escaped = String(cell).replace(/"/g, '""');
-            return escaped.includes(",") ? `"${escaped}"` : escaped;
+            return /[,\n\r]/.test(escaped) ? `"${escaped}"` : escaped;
           })
           .join(",")
       ),
