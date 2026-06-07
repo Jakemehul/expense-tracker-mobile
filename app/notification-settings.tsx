@@ -26,7 +26,7 @@ export default function NotificationSettingsScreen() {
     if (!hasPermission) {
       requestPermissions();
     }
-  }, []);
+  }, [hasPermission, requestPermissions]);
 
   const handleAddReminder = async () => {
     if (formData.days.length === 0) {
