@@ -76,7 +76,7 @@ export function SettingsModal({ visible, onClose }: SettingsModalProps) {
 
     const newTime = createTimeString(newHours, newMinutes);
     setReminderTime(newTime);
-    updateReminderSettings({ time: newTime });
+    await updateReminderSettings({ time: newTime });
   };
 
   return (
