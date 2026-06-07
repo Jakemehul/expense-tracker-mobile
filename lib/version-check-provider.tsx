@@ -18,7 +18,7 @@ export function VersionCheckProvider({ children }: { children: React.ReactNode }
     const setupPeriodicCheck = async () => {
       try {
         // Check for updates on app startup
-        await checkForUpdates("1.0.1");
+        await checkForUpdates("1.0.21");
 
         // Set up interval to check every 24 hours while app is running
         const intervalId = setInterval(async () => {
