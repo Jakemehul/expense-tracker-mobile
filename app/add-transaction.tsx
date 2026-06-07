@@ -34,7 +34,7 @@ export default function AddTransactionScreen() {
 
   const handleAddTransaction = async () => {
     if (!amount || !selectedCategory) {
-      alert("Please fill in all required fields");
+      alert("Please enter a valid amount greater than 0");
       return;
     }
 
