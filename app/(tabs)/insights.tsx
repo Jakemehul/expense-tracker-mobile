@@ -19,8 +19,8 @@ export default function InsightsScreen() {
   const categoryColors: Record<string, string> = {};
 
   DEFAULT_CATEGORIES.forEach((cat) => {
-    categoryIcons[cat.name] = cat.icon;
-    categoryColors[cat.name] = cat.color;
+    categoryIcons[cat.id] = cat.icon;
+    categoryColors[cat.id] = cat.color;
   });
 
   const insights = generateSpendingInsights(transactions);
