@@ -45,7 +45,7 @@ export const PhotoPickerService = {
 
       const IP = await getImagePicker();
       const result = await IP.launchImageLibraryAsync({
-        mediaTypes: IP.MediaTypeOptions.Images,
+        mediaTypes: IP.MediaType.Images,
         allowsEditing: true,
         aspect: [4, 3],
         quality: 0.8,
@@ -74,7 +74,7 @@ export const PhotoPickerService = {
       }
 
       const result = await IP.launchCameraAsync({
-        mediaTypes: IP.MediaTypeOptions.Images,
+        mediaTypes: IP.MediaType.Images,
         allowsEditing: true,
         aspect: [4, 3],
         quality: 0.8,
