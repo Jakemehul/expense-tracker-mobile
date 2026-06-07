@@ -54,7 +54,7 @@ export async function checkForUpdates(
       return null;
     }
 
-    const response = await fetch("http://localhost:3000/api/version");
+    const response = await fetch("http://localhost:3000/api/trpc/version.latest");
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -62,7 +62,7 @@ export async function checkForUpdates(
     const data = await response.json();
     await recordUpdateCheck();
 
-    const latestVersion = data.latestVersion || "1.0.1";
+    const latestVersion = data.latestVersion || "1.0.21";
     const hasUpdate = compareVersions(latestVersion, currentVersion) > 0;
 
     return {
