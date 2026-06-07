@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useVersionCheck } from "@/hooks/use-version-check";
 import { UpdateModal } from "@/components/update-modal";
 import { checkForUpdates } from "@/lib/background-update-service";
+import { sendUpdateNotification } from "@/lib/update-notification-service";
 
 /**
  * Provider component that handles version checking and displays update modal
@@ -53,6 +54,10 @@ export function VersionCheckProvider({ children }: { children: React.ReactNode }
       versionState.shouldShow
     ) {
       setShowUpdateModal(true);
+      sendUpdateNotification(
+    versionState.versionInfo.latestVersion,
+    versionState.versionInfo.changelog ?? []
+      );
     }
   }, [
     versionState.updateAvailable,
