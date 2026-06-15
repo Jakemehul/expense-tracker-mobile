@@ -15,6 +15,7 @@ import {
   initialWindowMetrics,
 } from "react-native-safe-area-context";
 import type { EdgeInsets, Metrics, Rect } from "react-native-safe-area-context";
+import { Analytics } from "@vercel/analytics/react";
 
 import { initManusRuntime, subscribeSafeAreaInsets } from "@/lib/_core/manus-runtime";
 import { TransactionProvider } from "@/lib/transaction-context";
@@ -95,6 +96,7 @@ export default function RootLayout() {
                   <Stack.Screen name="oauth/callback" />
                 </Stack>
                 <StatusBar style="auto" />
+                <Analytics />
               </VersionCheckProvider>
             </NotificationProvider>
           </BudgetProvider>
