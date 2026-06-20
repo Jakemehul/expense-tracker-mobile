@@ -140,7 +140,7 @@ export async function getCategoryAlertsToShow(
     const percentage = budget.limit > 0 ? (spent / budget.limit) * 100 : 0;
 
     // Check if should alert based on user's custom threshold
-    if (percentage >= thresholds.categoryThreshold)
+    if (percentage >= thresholds.categoryThreshold) {
       const categoryAlert = categoryAlerts[budget.categoryId];
 
       // Only add if not already alerted today
