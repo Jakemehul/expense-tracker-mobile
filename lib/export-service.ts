@@ -1,7 +1,6 @@
 import { Transaction, Category } from "./types";
 import * as FileSystem from "expo-file-system/legacy";
 import * as Sharing from "expo-sharing";
-import * as Print from "expo-print";
 
 /**
  * Export service for generating CSV and PDF files
@@ -388,55 +387,5 @@ export class ExportService {
     }
   }
 
-  /**
-   * Export transactions to PDF file
-   */
-  static async exportTransactionsPdf(transactions: Transaction[]): Promise<void> {
-  try {
-    const html = this.generateTransactionsHtml(transactions); // ← line 395, keep untouched
 
-    // expo-print converts the HTML into a real binary PDF file
-    const { uri } = await Print.printToFileAsync({ html });
-
-    // Share the actual PDF — no more fake extension tricks
-    if (await Sharing.isAvailableAsync()) {
-      await Sharing.shareAsync(uri, {
-        mimeType: "application/pdf",
-        dialogTitle: "Export Transactions Report",
-      });
-    } else {
-      alert(`PDF saved successfully`);
-    }
-  } catch (error) {                                          // ← keep from line 411 onward
-    console.error("Error exporting transactions PDF:", error);
-    throw error;
-  }
-}
-
-  /**
-   * Export category spending to PDF file
-   */
-  static async exportCategorySpendingPdf(
-  transactions: Transaction[],
-  categories: Category[]
-): Promise<void> {
-  try {
-    const html = this.generateCategorySpendingHtml(transactions, categories); // ← line 425, keep untouched
-
-    // expo-print does the actual HTML → PDF conversion
-    const { uri } = await Print.printToFileAsync({ html });
-
-    if (await Sharing.isAvailableAsync()) {
-      await Sharing.shareAsync(uri, {
-        mimeType: "application/pdf",
-        dialogTitle: "Export Category Spending Report",
-      });
-    } else {
-      alert(`PDF saved successfully`);
-    }
-  } catch (error) {                                          // ← keep from line 439 onward
-    console.error("Error exporting category spending PDF:", error);
-    throw error;
-  }
- }
 }

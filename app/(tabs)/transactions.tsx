@@ -36,7 +36,7 @@ export default function TransactionsScreen() {
   }, [transactions, searchText, filterType]);
 
   const getCategoryInfo = (categoryId: string) => {
-    return categories.find((c) => c.id === categoryName);
+    return categories.find((c) => c.id === categoryId);
   };
 
   const formatCurrency = (amount: number) => {

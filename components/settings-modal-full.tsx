@@ -118,25 +118,7 @@ export function SettingsModalFull({ visible, onClose }: SettingsModalProps) {
     }
   };
 
-  const handleExportTransactionsPdf = async () => {
-    try {
-      await ExportService.exportTransactionsPdf(transactions);
-      Alert.alert("Success", "Transactions exported as PDF");
-      setShowExportModal(false);
-    } catch (error) {
-      Alert.alert("Error", "Failed to export transactions PDF");
-    }
-  };
 
-  const handleExportCategorySpendingPdf = async () => {
-    try {
-      await ExportService.exportCategorySpendingPdf(transactions, categories);
-      Alert.alert("Success", "Category spending exported as PDF");
-      setShowExportModal(false);
-    } catch (error) {
-      Alert.alert("Error", "Failed to export category spending PDF");
-    }
-  };
 
   const handleClearData = () => {
     Alert.alert(
@@ -534,23 +516,7 @@ export function SettingsModalFull({ visible, onClose }: SettingsModalProps) {
               <Text className="text-white font-semibold">📈 Summary Report (CSV)</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={handleExportTransactionsPdf}
-              className="rounded-lg p-4 active:opacity-80"
-              style={{ backgroundColor: colors.primary }}
-              activeOpacity={0.8}
-            >
-              <Text className="text-white font-semibold">📋 Transactions (PDF)</Text>
-            </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={handleExportCategorySpendingPdf}
-              className="rounded-lg p-4 active:opacity-80"
-              style={{ backgroundColor: colors.primary }}
-              activeOpacity={0.8}
-            >
-              <Text className="text-white font-semibold">📉 Category Spending (PDF)</Text>
-            </TouchableOpacity>
 
             <TouchableOpacity
               onPress={() => setShowExportModal(false)}
