@@ -2715,10 +2715,13 @@ packages:
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
 
+<<<<<<< Updated upstream
   balanced-match@4.0.4:
     resolution: {integrity: sha512-BLrgEcRTwX2o6gGxGOCNyMvGSp35YofuYzw9h1IMTRmKqttAZZVU67bdb9Pr2vUHA8+j3i2tJfjO6C6+4myGTA==}
     engines: {node: 18 || 20 || >=22}
 
+=======
+>>>>>>> Stashed changes
   base64-arraybuffer@1.0.2:
     resolution: {integrity: sha512-I3yl4r9QB5ZRY3XuJVEPfc2XhZO6YweFPI+UovAzn+8/hb3oJ6lnysaFcjVpkCPfVWFUDvoZ8kmVDP7WyRtYtQ==}
     engines: {node: '>= 0.6.0'}
@@ -3180,8 +3183,13 @@ packages:
     resolution: {integrity: sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==}
     engines: {node: '>= 4'}
 
+<<<<<<< Updated upstream
   dompurify@3.4.8:
     resolution: {integrity: sha512-yb1cEmaOum7wFvOCSQxyfgVlv5D47Rc30iZWoMpbDIWTnJ6grDDQyu2KFJzB2k7u0pMuJcQ1zphH//fFnw2tjQ==}
+=======
+  dompurify@3.4.11:
+    resolution: {integrity: sha512-zhlUV12GsaRzMsf9q5M254YhA4+VuF0fG+QFqu6aYpoGlKtz+w8//jBcGVYBgQkR5GHjUomejY84AV+/uPbWdw==}
+>>>>>>> Stashed changes
 
   domutils@3.2.2:
     resolution: {integrity: sha512-6kZKyUajlDuqlHKVX1w7gyslj9MPIXzIFiz/rGu35uC1wMi+kMhQwGhl4lt9unC9Vb9INnY9Z3/ZA3+FhASLaw==}
@@ -4938,8 +4946,13 @@ packages:
     resolution: {integrity: sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==}
     engines: {node: '>=6'}
 
+<<<<<<< Updated upstream
   pako@2.1.0:
     resolution: {integrity: sha512-w+eufiZ1WuJYgPXbV/PO3NCMEc3xqylkKHzp8bxp1uW4qaSNQUkwmLLEc3kKsfz8lpV1F8Ht3U1Cm+9Srog2ug==}
+=======
+  pako@2.2.0:
+    resolution: {integrity: sha512-zJq6RP/5q+TO2OpFV3FHzlPnFjmkb7Nc99a5SNjJE+uu/PkpChs+NIZSSzbBoD+6kjiISXjfYdwj1ZRQ81dz/w==}
+>>>>>>> Stashed changes
 
   parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
@@ -8861,8 +8874,11 @@ snapshots:
 
   balanced-match@1.0.2: {}
 
+<<<<<<< Updated upstream
   balanced-match@4.0.4: {}
 
+=======
+>>>>>>> Stashed changes
   base64-arraybuffer@1.0.2:
     optional: true
 
@@ -9338,7 +9354,11 @@ snapshots:
     dependencies:
       domelementtype: 2.3.0
 
+<<<<<<< Updated upstream
   dompurify@3.4.8:
+=======
+  dompurify@3.4.11:
+>>>>>>> Stashed changes
     optionalDependencies:
       '@types/trusted-types': 2.0.7
     optional: true
@@ -10127,7 +10147,11 @@ snapshots:
     dependencies:
       '@types/pako': 2.0.4
       iobuffer: 5.4.0
+<<<<<<< Updated upstream
       pako: 2.1.0
+=======
+      pako: 2.2.0
+>>>>>>> Stashed changes
 
   fast-uri@3.1.0: {}
 
@@ -10766,7 +10790,11 @@ snapshots:
     optionalDependencies:
       canvg: 3.0.11
       core-js: 3.49.0
+<<<<<<< Updated upstream
       dompurify: 3.4.8
+=======
+      dompurify: 3.4.11
+>>>>>>> Stashed changes
       html2canvas: 1.4.1
 
   jsx-ast-utils@3.3.5:
@@ -11394,7 +11422,11 @@ snapshots:
 
   p-try@2.2.0: {}
 
+<<<<<<< Updated upstream
   pako@2.1.0: {}
+=======
+  pako@2.2.0: {}
+>>>>>>> Stashed changes
 
   parent-module@1.0.1:
     dependencies:
