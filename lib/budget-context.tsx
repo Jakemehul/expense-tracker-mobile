@@ -48,17 +48,13 @@ export function BudgetProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const addBudget = async (categoryId: string, limit: number) => {
-    if (budgets.some((b) => b.categoryId === categoryId)) {
-      console.warn("Budget already exists for this category");
-      return; // ← exits the function early, nothing else runs
-  }
     const newBudget: Budget = {
       id: Date.now().toString(),
       categoryId,
       limit,
       createdAt: new Date(),
       updatedAt: new Date(),
-  };
+    };
 
     const updated = [...budgets, newBudget];
     setBudgets(updated);

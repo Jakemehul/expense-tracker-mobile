@@ -32,7 +32,7 @@ export function useWeeklyAlert(): WeeklyAlertData {
       .reduce((sum, t) => sum + t.amount, 0);
 
     // Calculate total weekly budget (sum of all category budgets)
-    const weeklyBudget = budgets.reduce((sum, b) => sum + b.limit, 0)/4.33;
+    const weeklyBudget = budgets.reduce((sum, b) => sum + b.limit, 0);
 
     // Check if should alert (80% threshold)
     const percentage = weeklyBudget > 0 ? (weeklySpent / weeklyBudget) * 100 : 0;

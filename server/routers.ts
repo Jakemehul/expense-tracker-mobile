@@ -8,7 +8,7 @@ export const appRouter = router({
   system: systemRouter,
   version: router({
     latest: publicProcedure.query(() => ({
-      latestVersion: "1.0.21",
+      latestVersion: "1.0.2",
       downloadUrl: "https://expensetrk-9vdpakjp.manus.space",
       releaseNotes: "Critical update with receipt photo attachments",
       changelog: [
@@ -19,7 +19,7 @@ export const appRouter = router({
         "Persistent photo storage with transactions",
         "Improved photo picker with camera/library options",
       ],
-      forceUpdate: false,
+      forceUpdate: true,
     })),
   }),
   auth: router({

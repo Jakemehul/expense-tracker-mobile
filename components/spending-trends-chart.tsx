@@ -90,42 +90,29 @@ export function SpendingTrendsChart({ data, period }: SpendingTrendsChartProps) 
         </View>
 
         {/* Stats Grid */}
-        {/* Stats Grid — using flexWrap instead of CSS Grid (Grid doesn't work in React Native) */}
-<View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
+        <View className="grid grid-cols-2 gap-3">
+          <StatCard
+            label="Average/Day"
+            value={`₹${data.average.toLocaleString()}`}
+            backgroundColor={colors.primary}
+          />
+          <StatCard
+            label="Highest Day"
+            value={`₹${data.highest.toLocaleString()}`}
+            backgroundColor={colors.warning}
+          />
+          <StatCard
+            label="Lowest Day"
+            value={`₹${data.lowest.toLocaleString()}`}
+            backgroundColor={colors.success}
+          />
+          <StatCard
+            label="Days Tracked"
+            value={data.days.length.toString()}
+            backgroundColor={colors.primary}
+          />
+        </View>
 
-  <View style={{ flex: 1, minWidth: '45%' }}>
-    <StatCard
-      label="Average/Day"
-      value={`₹${data.average.toLocaleString()}`}
-      backgroundColor={colors.primary}
-    />
-  </View>
-
-  <View style={{ flex: 1, minWidth: '45%' }}>
-    <StatCard
-      label="Highest Day"
-      value={`₹${data.highest.toLocaleString()}`}
-      backgroundColor={colors.warning}
-    />
-  </View>
-
-  <View style={{ flex: 1, minWidth: '45%' }}>
-    <StatCard
-      label="Lowest Day"
-      value={`₹${data.lowest.toLocaleString()}`}
-      backgroundColor={colors.success}
-    />
-  </View>
-
-  <View style={{ flex: 1, minWidth: '45%' }}>
-    <StatCard
-      label="Days Tracked"
-      value={data.days.length.toString()}
-      backgroundColor={colors.primary}
-    />
-  </View>
-
-</View>
         {/* Day-by-day breakdown */}
         <View className="mt-4 pt-4 border-t" style={{ borderTopColor: colors.border }}>
           <Text className="text-sm font-semibold text-foreground mb-3">

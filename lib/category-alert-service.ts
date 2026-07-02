@@ -118,7 +118,7 @@ export async function getCategoryAlertsToShow(
   const today = new Date().toISOString().split("T")[0];
   const thresholds = await getAlertThresholds();
   const alerts: CategoryAlertRecord[] = [];
-  const categoryAlerts = await getCategoryAlerts();
+
   // Check each budget
   for (const budget of budgets) {
     const category = categories.find((c) => c.id === budget.categoryId);
@@ -141,6 +141,7 @@ export async function getCategoryAlertsToShow(
 
     // Check if should alert based on user's custom threshold
     if (percentage >= thresholds.categoryThreshold) {
+      const categoryAlerts = await getCategoryAlerts();
       const categoryAlert = categoryAlerts[budget.categoryId];
 
       // Only add if not already alerted today

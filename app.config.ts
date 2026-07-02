@@ -56,7 +56,6 @@ const config: ExpoConfig = {
   },
   android: {
     versionCode: 4,
-    minSdkVersion: 24,
     adaptiveIcon: {
       backgroundColor: "#E6F4FE",
       foregroundImage: "./assets/images/android-icon-foreground.png",
@@ -85,11 +84,6 @@ const config: ExpoConfig = {
     bundler: "metro",
     output: "static",
     favicon: "./assets/images/favicon.png",
-  },
-  extra: {
-    eas: {
-      projectId: "da3e3710-212f-45e2-b3e5-10d37dab8702",
-    },
   },
   plugins: [
     "expo-router",
@@ -123,9 +117,9 @@ const config: ExpoConfig = {
       {
         android: {
           buildArchs: ["arm64-v8a", "armeabi-v7a"],
-          minSdkVersion: 24,
+          minSdkVersion: 21,
           targetSdkVersion: 34,
-          compileSdkVersion: 36,
+          compileSdkVersion: 34,
           usesCleartextTraffic: false,
         },
       },

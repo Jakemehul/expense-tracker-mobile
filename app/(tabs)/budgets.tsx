@@ -1,4 +1,3 @@
-
 import { useState, useMemo, useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity, Animated } from "react-native";
 import { useRouter } from "expo-router";
@@ -43,7 +42,7 @@ export default function BudgetsScreen() {
   const topCategories = useMemo(() => {
     const categoryTotals: { [key: string]: number } = {};
     transactions
-      .filter((t) => t.type === "expense" && t.date.getMonth() === now.getMonth()) && t.date.getFullYear() === now.getFullYear()
+      .filter((t) => t.type === "expense" && t.date.getMonth() === now.getMonth())
       .forEach((t) => {
         categoryTotals[t.category] = (categoryTotals[t.category] || 0) + t.amount;
       });
@@ -53,42 +52,30 @@ export default function BudgetsScreen() {
       .slice(0, 5)
       .map(([category, amount]) => ({ category, amount }));
   }, [transactions, now]);
-  // Keep this unchanged — still used by BarChart
-const chartData = useMemo(() => {
-  if (topCategories.length === 0) return null;
 
-  const labels = topCategories.map((c) => c.category.substring(0, 8));
-  const data = topCategories.map((c) => c.amount);
-
-  return {
-    labels,
-    datasets: [
-      {
-        data,
-        colors: [
-          () => "#0a7ea4",
-          () => "#22C55E",
-          () => "#F59E0B",
-          () => "#EF4444",
-          () => "#8B5CF6",
-        ],
-      },
-    ],
-  };
-}, [topCategories]);
-const pieChartData = useMemo(() => {
+  const chartData = useMemo(() => {
     if (topCategories.length === 0) return null;
 
-    const sliceColors = ["#0a7ea4", "#22C55E", "#F59E0B", "#EF4444", "#8B5CF6"];
+    const labels = topCategories.map((c) => c.category.substring(0, 8));
+    const data = topCategories.map((c) => c.amount);
 
-    return topCategories.map((c, idx) => ({
-      name: c.category.substring(0, 8),
-      population: c.amount,
-      color: sliceColors[idx] || "#999",
-      legendFontColor: "#7F7F7F",
-      legendFontSize: 12,
-    }));
+    return {
+      labels,
+      datasets: [
+        {
+          data,
+          colors: [
+            () => "#0a7ea4",
+            () => "#22C55E",
+            () => "#F59E0B",
+            () => "#EF4444",
+            () => "#8B5CF6",
+          ],
+        },
+      ],
+    };
   }, [topCategories]);
+
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-IN", {
       style: "currency",
@@ -284,7 +271,7 @@ const pieChartData = useMemo(() => {
                   <View className="bg-surface rounded-2xl p-4 border border-border">
                     {chartType === "pie" ? (
                       <PieChart
-                        data={pieChartData as any}
+                        data={chartData as any}
                         width={300}
                         height={220}
                         chartConfig={{
@@ -293,7 +280,7 @@ const pieChartData = useMemo(() => {
                           backgroundGradientFrom: "#1e2022",
                           backgroundGradientTo: "#1e2022",
                         }}
-                        accessor="population"
+                        accessor="data"
                         backgroundColor="transparent"
                         paddingLeft="0"
                         absolute

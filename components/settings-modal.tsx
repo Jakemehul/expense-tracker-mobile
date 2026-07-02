@@ -76,7 +76,7 @@ export function SettingsModal({ visible, onClose }: SettingsModalProps) {
 
     const newTime = createTimeString(newHours, newMinutes);
     setReminderTime(newTime);
-    await updateReminderSettings({ time: newTime });
+    updateReminderSettings({ time: newTime });
   };
 
   return (
@@ -237,7 +237,7 @@ export function SettingsModal({ visible, onClose }: SettingsModalProps) {
                   className="text-sm"
                   style={{ color: colors.muted }}
                 >
-                  1.0.21
+                  1.0.0
                 </Text>
               </View>
 

@@ -156,7 +156,7 @@ function calculateTrendData(
   const total = daySpending.reduce((sum, d) => sum + d.amount, 0);
   const average = total / days;
   const highest = Math.max(...daySpending.map((d) => d.amount), 0);
-  const lowest = Math.min(...daySpending.map((d) => d.amount > 0 ? d.amount : Infinity));
+  const lowest = Math.min(...daySpending.map((d) => d.amount > 0 ? d.amount : Infinity), 0);
 
   // Calculate percentages
   daySpending.forEach((d) => {
