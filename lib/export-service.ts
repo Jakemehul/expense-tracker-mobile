@@ -388,34 +388,32 @@ export class ExportService {
   }
 
   /**
-   * Export transactions to PDF file
+   * Export transactions to HTML file
    */
   static async exportTransactionsPdf(transactions: Transaction[]): Promise<void> {
     try {
       const html = this.generateTransactionsHtml(transactions);
-      const fileName = `expense-tracker-transactions-${new Date().toISOString().split("T")[0]}.pdf`;
+      const fileName = `expense-tracker-transactions-${new Date().toISOString().split("T")[0]}.html`;
       const filePath = `${FileSystem.documentDirectory}${fileName}`;
 
-      // For now, we'll export as HTML since PDF generation requires additional setup
-      // In production, you'd use a library like react-pdf or pdfkit
       await FileSystem.writeAsStringAsync(filePath, html);
 
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(filePath, {
-          mimeType: "application/pdf",
+          mimeType: "text/html",
           dialogTitle: "Export Transactions Report",
         });
       } else {
         alert(`File saved to: ${filePath}`);
       }
     } catch (error) {
-      console.error("Error exporting transactions PDF:", error);
+      console.error("Error exporting transactions HTML:", error);
       throw error;
     }
   }
 
   /**
-   * Export category spending to PDF file
+   * Export category spending to HTML file
    */
   static async exportCategorySpendingPdf(
     transactions: Transaction[],
@@ -423,21 +421,21 @@ export class ExportService {
   ): Promise<void> {
     try {
       const html = this.generateCategorySpendingHtml(transactions, categories);
-      const fileName = `expense-tracker-category-spending-${new Date().toISOString().split("T")[0]}.pdf`;
+      const fileName = `expense-tracker-category-spending-${new Date().toISOString().split("T")[0]}.html`;
       const filePath = `${FileSystem.documentDirectory}${fileName}`;
 
       await FileSystem.writeAsStringAsync(filePath, html);
 
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(filePath, {
-          mimeType: "application/pdf",
+          mimeType: "text/html",
           dialogTitle: "Export Category Spending Report",
         });
       } else {
         alert(`File saved to: ${filePath}`);
       }
     } catch (error) {
-      console.error("Error exporting category spending PDF:", error);
+      console.error("Error exporting category spending HTML:", error);
       throw error;
     }
   }
